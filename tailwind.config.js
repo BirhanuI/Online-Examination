@@ -14,6 +14,7 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                'space': ['Space Grotesk', 'sans-serif'],
             },
         },
     },
