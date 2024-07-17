@@ -1,8 +1,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import { Add } from "@mui/icons-material";
-
-export default function Dashboard({ auth }) {
+const Index = ({ auth }) => {
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Dashboard" />
@@ -23,4 +22,6 @@ export default function Dashboard({ auth }) {
             </div>
         </AuthenticatedLayout>
     );
-}
+};
+
+export default Index;
