@@ -3,6 +3,7 @@
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\ExaminationController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\QuestionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -22,6 +23,9 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/examination', [ExaminationController::class, 'index'])->name('examination.index');
     Route::get('/exam', [ExamController::class, 'index'])->name('exam.index');
+    Route::post('/exam', [ExamController::class, 'store'])->name('exam.index');
+
+    Route::get('/exam/{id}', [QuestionController::class, 'index'])->name('question.index');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

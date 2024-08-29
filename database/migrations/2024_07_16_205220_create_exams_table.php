@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->date('start_date');
-            $table->date('end_date');
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
+            $table->string('grade')->nullable();
+            $table->foreignId('user_id')->nullable();
             $table->foreignId('subject_id')->nullable();
             $table->string('duration');
             $table->timestamps();

@@ -17,5 +17,6 @@ class Exam extends Model
         'end_date',
         'subject_id',
         'duration',
+        'grade',
     ];
 }

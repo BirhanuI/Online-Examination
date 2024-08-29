@@ -7,12 +7,14 @@ import logo from "./../assets/online-test.png";
 import SidebarComponent from "@/Components/Sidebar";
 import { IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
-
     return (
         <div className="flex ">
+            <ToastContainer />
             {user.role === "admin" && <SidebarComponent />}
             <div className="min-h-screen bg-gray-100 w-full">
                 <nav
