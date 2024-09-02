@@ -22,10 +22,10 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/examination', [ExaminationController::class, 'index'])->name('examination.index');
+    Route::get('/take-exam/{title}', [ExaminationController::class, 'takeExam'])->name('take-exam.index');
     Route::get('/exam', [ExamController::class, 'index'])->name('exam.index');
     Route::post('/exam', [ExamController::class, 'store'])->name('exam.index');
-
-    Route::get('/exam/{id}', [QuestionController::class, 'index'])->name('question.index');
+    Route::get('/exam/create', [ExamController::class, 'create'])->name('exam.create');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

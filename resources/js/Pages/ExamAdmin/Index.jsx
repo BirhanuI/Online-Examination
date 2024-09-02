@@ -2,8 +2,7 @@ import DataTable from "@/Components/DataTable";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
 import { Add, Delete, Edit, ViewList } from "@mui/icons-material";
-import { Button, Icon, IconButton, Tooltip, Typography } from "@mui/material";
-import CreateExam from "./CreateExam";
+import {IconButton, Tooltip, } from "@mui/material";
 import { useState } from "react";
 const Index = ({ auth, exams }) => {
     const [showCreateExamModule, setShowCreateExamModule] = useState(false);
@@ -34,15 +33,15 @@ const Index = ({ auth, exams }) => {
             accessorKey: "actions",
             header: "Actions",
             size: 100,
-            Cell: () => (
+            Cell: ({row}) => (
                 <div className="">
-                    <Link>
+                    {/* <Link href={route('question.index',{id:row.original.id})}>
                         <Tooltip title="View Question" placement="top">
                             <IconButton>
                                 <ViewList fontSize="medium" />
                             </IconButton>
                         </Tooltip>
-                    </Link>
+                    </Link> */}
                     <Tooltip title="Edit Exam" placement="top">
                         <IconButton>
                             <Edit fontSize="small" />
@@ -61,22 +60,18 @@ const Index = ({ auth, exams }) => {
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Dashboard" />
-            <CreateExam
-                show={showCreateExamModule}
-                onClose={setShowCreateExamModule}
-            />
             <div className="p-5 flex flex-col gap-5">
                 <div className="p-10 bg-white flex border rounded shadow-lg flex-col gap-10">
                     <div className="flex justify-between items-center text-lg w-full ">
                         <p className="font-space text-gray-800">
                             Previous Exams
                         </p>
-                        <Button onClick={() => setShowCreateExamModule(true)}>
+                        <Link href={route("exam.create")}>
                             <span className="flex items-start">
                                 <Add fontSize="medium" />
                                 Create Exam
                             </span>
-                        </Button>
+                        </Link>
                     </div>
                     <div className="">
                         <DataTable data={exams} columns={examColumn} />
