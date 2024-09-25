@@ -28,9 +28,7 @@ const CreateExam = ({ auth, exam }) => {
         duration: exam ? exam.duration : "",
         subject_id: exam ? exam.subject_id : "",
         grade: exam ? exam.grade : "",
-        questions: exam.questions
-            ? exam.questions
-            : [
+        questions: exam? exam.questions: [
                   {
                       question: "",
                       option1: "",

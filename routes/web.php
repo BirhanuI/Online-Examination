@@ -29,10 +29,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/exam', [ExamController::class, 'index'])->name('exam.index');
     Route::post('/exam', [ExamController::class, 'store'])->name('exam.index');
+    Route::get('/exam/create', [ExamController::class, 'create'])->name('exam.create');
     Route::delete('/exam/{id}', [ExamController::class, 'destroy'])->name('exam.destroy');
     Route::get('/exam/{id}', [ExamController::class, 'edit'])->name('exam.edit');
     Route::put('/exam/{id}', [ExamController::class, 'update'])->name('exam.update');
-    Route::get('/exam/create', [ExamController::class, 'create'])->name('exam.create');
 
 
     Route::get('/previous-exam', [ExamResultController::class, 'index'])->name('result.index');
