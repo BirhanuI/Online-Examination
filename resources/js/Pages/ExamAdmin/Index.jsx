@@ -1,11 +1,14 @@
 import DataTable from "@/Components/DataTable";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import { Add, Delete, Edit, ViewList } from "@mui/icons-material";
 import {IconButton, Tooltip, } from "@mui/material";
 import { useState } from "react";
 const Index = ({ auth, exams }) => {
-    const [showCreateExamModule, setShowCreateExamModule] = useState(false);
+    function handleDelete(id){
+        router.delete(`/exam/${id}`);
+    }
+
     const examColumn = [
         {
             accessorKey: "title",
@@ -43,12 +46,12 @@ const Index = ({ auth, exams }) => {
                         </Tooltip>
                     </Link> */}
                     <Tooltip title="Edit Exam" placement="top">
-                        <IconButton>
+                        <IconButton onClick={() => router.get(`/exam/${row.original.id}`) }>
                             <Edit fontSize="small" />
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="Delete Exam" placement="top">
-                        <IconButton>
+                        <IconButton onClick={() => handleDelete(row.original.id)}>
                             <Delete fontSize="small" />
                         </IconButton>
                     </Tooltip>
