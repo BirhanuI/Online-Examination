@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useRef } from "react";
 import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
 import { router } from "@inertiajs/react";
+import CountDown from "@/Components/CountDown";
 
 const TakeExam = ({ auth, exam, questions }) => {
     var sliderRef = useRef(null);
@@ -33,13 +34,19 @@ const TakeExam = ({ auth, exam, questions }) => {
         router.post(
             "/examination",
             { answers: answer, exam_id: exam.id },
-            { onSuccess: () => {}, }
+            { onSuccess: () => {} }
         );
     }
+    function handleTimeExpiry(){
+        console.log("Time Expired");
+    }
+    const time = exam.start_date || new Date();
+    // time.setSeconds(time.getSeconds() + 10);
+    time.setMinutes(time.getMinutes() + Number(exam.duration));
     return (
         <AuthenticatedLayout user={auth.user}>
             <div className="w-full flex gap-5 p-5 ">
-                <div className="w-3/4 p-5  shadow-md rounded-md bg-white">
+                <div className="w-4/6 p-5  shadow-md rounded-md bg-white">
                     <h1 className="font-space text-lg font-semibold">
                         {exam.title}
                     </h1>
@@ -160,22 +167,30 @@ const TakeExam = ({ auth, exam, questions }) => {
                         )}
                     </div>
                 </div>
-                <div className="w-1/4 p-10 shadow-md rounded-md bg-white">
-                    <div className="flex ">
-                        {questions.map((question, index) => (
-                            <div
-                                onClick={() => sliderRef.slickGoTo(index)}
-                                className={`cursor-pointer w-9 h-9 ${
-                                    answer[question.id] ? "bg-green-500" : ""
-                                } bg-gray-800 text-white font-space border flex justify-center items-center ${
-                                    index + 1 === questions.length
-                                        ? "rounded-r-md"
-                                        : ""
-                                } ${index === 0 ? "rounded-l-md" : ""}`}
-                            >
-                                {index + 1}
-                            </div>
-                        ))}
+                <div className="w-2/6 p-10 shadow-md rounded-md bg-white flex flex-col gap-5">
+                    <div className="">
+                        <CountDown expiryTimestamp={time} onExpireFn={handleTimeExpiry}/>
+                    </div>
+                    <div className="flex justify-center flex-col mt-5 items-center">
+                        <div className="text-xl">Questions</div>
+                        <div className="flex flex-wrap justify-center mt-2">
+                            {questions.map((question, index) => (
+                                <div
+                                    onClick={() => sliderRef.slickGoTo(index)}
+                                    className={`cursor-pointer w-9 h-9 ${
+                                        answer[question.id]
+                                            ? "bg-green-500"
+                                            : ""
+                                    } bg-gray-800 text-white font-space border flex justify-center items-center ${
+                                        index + 1 === questions.length
+                                            ? "rounded-r-md"
+                                            : ""
+                                    } ${index === 0 ? "rounded-l-md" : ""}`}
+                                >
+                                    {index + 1}
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>
