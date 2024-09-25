@@ -12,9 +12,9 @@ export default function CountDown({ expiryTimestamp, onExpireFn }) {
 
     return (
         <div className="flex flex-col gap-5 items-center">
-            <Typography variant="h5">Remaining Time </Typography>
-            <div className="text-5xl flex justify-center items-center ">
-                {hours > 0 && <span><Digit value={minutes} title={"Hours"} />:</span>}
+            <Typography variant="h5" className={` ${hours == 0 ? minutes < 5 ?"text-red-500":"" :""}`}>Remaining Time </Typography>
+            <div className={`text-5xl flex justify-center items-center ${hours == 0 ? minutes < 5 ?"animate-pulse":"" :""}`}>
+                {hours > 0 && <span className="flex items-center"><Digit value={hours} title={"Hours"} />:</span>}
                 <span className="">
                     <Digit value={minutes} title={"Minutes"} />
                 </span>

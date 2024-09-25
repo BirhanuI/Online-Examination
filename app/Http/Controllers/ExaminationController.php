@@ -32,7 +32,8 @@ class ExaminationController extends Controller
             }
         }
         Attempts::create(['user_id' => Auth::id(), 'exam_id' => $request->exam_id, 'score' => $result, 'start_date' => now(), 'end_date' => now()]);
-        return to_route('examination.index');
+        // $exams = Exam::latest()->get();
+        // return Inertia::render('ExamPage/Index', ['exams' => $exams]);
     }
     public function takeExam(Request $request)
     {
