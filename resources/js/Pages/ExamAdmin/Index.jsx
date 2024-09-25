@@ -1,7 +1,7 @@
 import DataTable from "@/Components/DataTable";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router } from "@inertiajs/react";
-import { Add, Delete, Edit, ViewList } from "@mui/icons-material";
+import { Add, Delete, Edit,} from "@mui/icons-material";
 import {IconButton, Tooltip, } from "@mui/material";
 import { useState } from "react";
 const Index = ({ auth, exams }) => {
