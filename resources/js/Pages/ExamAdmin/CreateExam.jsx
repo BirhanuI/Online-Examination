@@ -19,26 +19,28 @@ import { toast } from "react-toastify";
 import { Add, ArrowDropDown, Remove } from "@mui/icons-material";
 import { useState } from "react";
 
-const CreateExam = ({ auth }) => {
+const CreateExam = ({ auth, exam }) => {
     const ExamForm = useForm({
-        title: "",
-        description: "",
-        start_date: "",
-        end_date: "",
-        duration: "",
-        subject_id: "",
-        grade: "",
-        questions: [
-            {
-                question: "",
-                option1: "",
-                option2: "",
-                option3: "",
-                option4: "",
-                answer: "option1",
-                description: "",
-            },
-        ],
+        title: exam ? exam.title : "",
+        description: exam ? exam.description : "",
+        start_date: exam ? exam.start_date : "",
+        end_date: exam ? exam.end_date : "",
+        duration: exam ? exam.duration : "",
+        subject_id: exam ? exam.subject_id : "",
+        grade: exam ? exam.grade : "",
+        questions: exam.questions
+            ? exam.questions
+            : [
+                  {
+                      question: "",
+                      option1: "",
+                      option2: "",
+                      option3: "",
+                      option4: "",
+                      answer: "option1",
+                      description: "",
+                  },
+              ],
     });
     const subject = [
         { name: "Biology", id: "1" },
@@ -47,12 +49,20 @@ const CreateExam = ({ auth }) => {
     ];
     const handleSubmit = (e) => {
         e.preventDefault();
-        ExamForm.post("/exam", {
-            onSuccess: () => {
-                toast.success("Exam created successfully");
-                resetForm();
-            },
-        });
+        if (exam) {
+            ExamForm.put(`/exam/${exam.id}`, {
+                onSuccess: () => {
+                    toast.success("Exam updated successfully");
+                },
+            });
+        } else {
+            ExamForm.post("/exam", {
+                onSuccess: () => {
+                    toast.success("Exam created successfully");
+                    resetForm();
+                },
+            });
+        }
     };
     function handleAddQuestion() {
         ExamForm.setData("questions", [
@@ -205,7 +215,8 @@ const CreateExam = ({ auth }) => {
                                         onClick={handleAddQuestion}
                                         variant="contained"
                                     >
-                                        <Add /> Question
+                                        <Add />
+                                        Add Question
                                     </Button>
                                 </div>
                                 <div className="mt-5 flex flex-col gap-1">
@@ -504,7 +515,7 @@ const CreateExam = ({ auth }) => {
                                 type="submit"
                                 disabled={ExamForm.processing}
                             >
-                                Submit
+                                {exam ? "update" : "submit"}
                             </Button>
                         </div>
                     </form>

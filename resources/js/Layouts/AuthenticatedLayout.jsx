@@ -61,9 +61,9 @@ export default function Authenticated({ user, header, children }) {
                                             Examination
                                         </NavLink>
                                         <NavLink
-                                            href={route("dashboard")}
+                                            href={route("result.index")}
                                             active={route().current(
-                                                "previous-exams"
+                                                "result.index"
                                             )}
                                             className="text-white"
                                         >

@@ -2,9 +2,11 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { Checkbox, FormControlLabel } from "@mui/material";
+import { Button, Checkbox, FormControlLabel, IconButton } from "@mui/material";
 import { useState } from "react";
 import { useRef } from "react";
+import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
+import { router } from "@inertiajs/react";
 
 const TakeExam = ({ auth, exam, questions }) => {
     var sliderRef = useRef(null);
@@ -20,10 +22,19 @@ const TakeExam = ({ auth, exam, questions }) => {
         speed: 500,
         slidesToShow: 1,
         slidesToScroll: 1,
+        afterChange: (index) => setCurrentQuestionIndex(index),
     };
     const [answer, setAnswer] = useState({});
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     function handleAnswerChange(questionId, answer) {
         setAnswer((prev) => ({ ...prev, [questionId]: answer }));
+    }
+    function handleSubmit() {
+        router.post(
+            "/examination",
+            { answers: answer, exam_id: exam.id },
+            { onSuccess: () => {}, }
+        );
     }
     return (
         <AuthenticatedLayout user={auth.user}>
@@ -134,13 +145,19 @@ const TakeExam = ({ auth, exam, questions }) => {
                             ))}
                         </Slider>
                     </div>
-                    <div className="flex gap-5 p-10 justify-around">
-                        <button className="button" onClick={previous}>
-                            Previous
-                        </button>
-                        <button className="button" onClick={next}>
-                            Next
-                        </button>
+                    <div className="flex gap-5 p-10 justify-around items-center">
+                        <IconButton onClick={previous}>
+                            <ArrowBackIos />
+                        </IconButton>
+                        {questions.length - 1 == currentQuestionIndex ? (
+                            <Button variant="contained" onClick={handleSubmit}>
+                                Submit
+                            </Button>
+                        ) : (
+                            <IconButton onClick={next}>
+                                <ArrowForwardIos />
+                            </IconButton>
+                        )}
                     </div>
                 </div>
                 <div className="w-1/4 p-10 shadow-md rounded-md bg-white">
