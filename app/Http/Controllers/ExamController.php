@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Exam;
+use App\Models\ExamSchedule;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -12,7 +14,7 @@ class ExamController extends Controller
 {
     public function index()
     {
-        $exams = Exam::latest()->get();
+        $exams = Exam::with('schedule')->latest()->get();
         return Inertia::render('ExamAdmin/Index', ['exams' => $exams]);
     }
     public function store(Request $request)
@@ -79,7 +81,7 @@ class ExamController extends Controller
         DB::transaction(function () use ($request, $id) {
             $exam =  Exam::find($id);
             $exam->update($request->all());
-            if(!$exam){
+            if (!$exam) {
                 return to_route('exam.index');
             }
             $exam->questions()->delete();
@@ -91,5 +93,24 @@ class ExamController extends Controller
     {
 
         Exam::find($id)->delete();
+    }
+    public function setExamSchedule(Request $request, string $id)
+    {
+        // $schedule = ExamSchedule::all();
+        // dd($schedule);
+        $validatedData = $request->validate([
+            'date' => 'required|date',
+            'time' => 'required|date',
+        ]);
+        $exam = Exam::find($id);
+        if (!$exam) return false;
+        $date = $validatedData['date'];
+        $time = $validatedData['time'];
+        $dateTime = Carbon::create($time);
+        $date = $date . ' ' . $dateTime->format('H:i:s');
+        $carbonDate = Carbon::createFromFormat('Y-m-d H:i:s', $date, 'Africa/Addis_Ababa');
+        $date = $carbonDate->setTimezone('UTC');
+        $exam->schedule()->create(['date'=>$date,'time'=>$time]);
+        $exam->save();
     }
 }

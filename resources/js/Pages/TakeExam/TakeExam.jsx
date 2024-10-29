@@ -5,7 +5,12 @@ import "slick-carousel/slick/slick-theme.css";
 import { Button, Checkbox, FormControlLabel, IconButton } from "@mui/material";
 import { useState } from "react";
 import { useRef } from "react";
-import { Alarm, ArrowBackIos, ArrowForwardIos, Check } from "@mui/icons-material";
+import {
+    Alarm,
+    ArrowBackIos,
+    ArrowForwardIos,
+    Check,
+} from "@mui/icons-material";
 import { Link, router } from "@inertiajs/react";
 import CountDown from "@/Components/CountDown";
 import Modal from "@/Components/Modal";
@@ -49,12 +54,12 @@ const TakeExam = ({ auth, exam, questions }) => {
         handleSubmit();
     }
     const [showInstructionModal, setShowInstructionModal] = useState(false);
-    const [showExpiryModal, setShowExpiryModal]=useState(false)
+    const [showExpiryModal, setShowExpiryModal] = useState(false);
     const time = exam.start_date || new Date();
     time.setMinutes(time.getMinutes() + Number(exam.duration));
     return (
         <AuthenticatedLayout user={auth.user}>
-            <TimeExpiryModal show={showExpiryModal}/>
+            <TimeExpiryModal show={showExpiryModal} />
             <Modal show={showInstructionModal}>
                 <div className="p-5 overflow-y-auto max-h-96">
                     <p className="text-center p-5 font-bold">
@@ -261,7 +266,7 @@ const TakeExam = ({ auth, exam, questions }) => {
 
 export default TakeExam;
 
-function TimeExpiryModal({show}) {
+function TimeExpiryModal({ show }) {
     return (
         <Modal show={show}>
             <div className="p-5">
@@ -271,15 +276,18 @@ function TimeExpiryModal({show}) {
                 <div className="text-xl font-bold p-5 flex justify-center flex-col">
                     <div className="inline-flex justify-center items-center flex-col">
                         <div className="flex items-center justify-center w-40 h-40 text-8xl  border rounded-full border-gren-500">
-                            <Alarm
-                                className="text--500"
-                                fontSize="inherit"
-                            />
+                            <Alarm className="text--500" fontSize="inherit" />
                         </div>
-                    <p className="py-5">Your Answers are automaticly submitted.</p>
+                        <p className="py-5">
+                            Your Answers are automaticly submitted.
+                        </p>
                     </div>
                 </div>
-                <div className="flex justify-end mt-5"><Link href={route("examination.index")}><Button variant="contained">Go Back</Button></Link></div>
+                <div className="flex justify-end mt-5">
+                    <Link href={route("examination.index")}>
+                        <Button variant="contained">Go Back</Button>
+                    </Link>
+                </div>
             </div>
         </Modal>
     );

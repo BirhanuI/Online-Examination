@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Exam extends Model
 {
@@ -26,4 +27,10 @@ class Exam extends Model
     {
         return $this->hasMany(Response::class);
     }
+
+    public function schedule():HasOne
+    {
+        return $this->hasOne(ExamSchedule::class);
+    }
+
 }

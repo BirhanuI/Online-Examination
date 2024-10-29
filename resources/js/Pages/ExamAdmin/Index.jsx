@@ -1,14 +1,27 @@
 import DataTable from "@/Components/DataTable";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router } from "@inertiajs/react";
-import { Add, Delete, Edit, } from "@mui/icons-material";
-import {IconButton, Tooltip, } from "@mui/material";
+import { Add, Delete, Edit } from "@mui/icons-material";
+import { Button, IconButton, Tooltip } from "@mui/material";
 import { useState } from "react";
+import ScheduleExam from "./ScheduleExam";
+import { useEffect } from "react";
+import axios from "axios";
 const Index = ({ auth, exams }) => {
-    function handleDelete(id){
+    useEffect(()=>{
+     const fetch = async () => {
+         await axios.get('/api/time').then((res)=>{
+             console.log(res.data.time);
+         });
+     }   
+     fetch();
+    },[]);
+    function handleDelete(id) {
         router.delete(`/exam/${id}`);
     }
 
+    const [showScheduleModal, setShowScheduleModal] = useState(false);
+    const [examId, setExamId] = useState(null);
     const examColumn = [
         {
             accessorKey: "title",
@@ -33,25 +46,44 @@ const Index = ({ auth, exams }) => {
             size: 100,
         },
         {
+            accessorKey: "schedule_date",
+            header: "Give Exam",
+            size: 100,
+            Cell: ({ row }) => (
+                <div className="">
+                    <Button
+                        variant="contained"
+                        disabled={row.original.schedule?true:false}
+                        onClick={() => {
+                            setExamId(row.original.id);
+                            setShowScheduleModal(true);
+                        }}
+                    >
+                        schedule exam
+                    </Button>
+                </div>
+            ),
+            size: 150,
+        },
+        {
             accessorKey: "actions",
             header: "Actions",
             size: 100,
-            Cell: ({row}) => (
+            Cell: ({ row }) => (
                 <div className="">
-                    {/* <Link href={route('question.index',{id:row.original.id})}>
-                        <Tooltip title="View Question" placement="top">
-                            <IconButton>
-                                <ViewList fontSize="medium" />
-                            </IconButton>
-                        </Tooltip>
-                    </Link> */}
                     <Tooltip title="Edit Exam" placement="top">
-                        <IconButton onClick={() => router.get(`/exam/${row.original.id}`) }>
+                        <IconButton
+                            onClick={() =>
+                                router.get(`/exam/${row.original.id}`)
+                            }
+                        >
                             <Edit fontSize="small" />
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="Delete Exam" placement="top">
-                        <IconButton onClick={() => handleDelete(row.original.id)}>
+                        <IconButton
+                            onClick={() => handleDelete(row.original.id)}
+                        >
                             <Delete fontSize="small" />
                         </IconButton>
                     </Tooltip>
@@ -63,6 +95,11 @@ const Index = ({ auth, exams }) => {
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Dashboard" />
+            <ScheduleExam
+                examId={examId}
+                show={showScheduleModal}
+                onClose={setShowScheduleModal}
+            />
             <div className="p-5 flex flex-col gap-5">
                 <div className="p-10 bg-white flex border rounded shadow-lg flex-col gap-10">
                     <div className="flex justify-between items-center text-lg w-full ">

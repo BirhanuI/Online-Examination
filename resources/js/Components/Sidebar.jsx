@@ -76,8 +76,9 @@ const SidebarComponent = () => {
                 </MenuItem>
                 <MenuItem
                     icon={<GroupIcon />}
+                    component={<Link href={route("student.index")} />}
                     style={{
-                        backgroundColor: route().current("students")
+                        backgroundColor: route().current("student")
                             ? " #1f2937 "
                             : "  ",
                     }}

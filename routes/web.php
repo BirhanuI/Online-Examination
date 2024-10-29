@@ -5,6 +5,7 @@ use App\Http\Controllers\ExaminationController;
 use App\Http\Controllers\ExamResultController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\StudentController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -25,6 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/examination', [ExaminationController::class, 'index'])->name('examination.index');
     Route::post('/examination', [ExaminationController::class, 'store'])->name('take-examination.index');
     Route::get('/take-exam/{title}', [ExaminationController::class, 'takeExam'])->name('take-exam.index');
+    Route::get('api/time', [ExaminationController::class, 'getTime'])->name('time.index');
 
 
     Route::get('/exam', [ExamController::class, 'index'])->name('exam.index');
@@ -33,7 +35,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/exam/{id}', [ExamController::class, 'destroy'])->name('exam.destroy');
     Route::get('/exam/{id}', [ExamController::class, 'edit'])->name('exam.edit');
     Route::put('/exam/{id}', [ExamController::class, 'update'])->name('exam.update');
+    Route::post('/exam/schedule/{id}', [ExamController::class, 'setExamSchedule'])->name('exam.set-schedule');
 
+    Route::resource('student', StudentController::class)->name('student.index', 'student.create', 'student.store', 'student.edit', 'student.update', 'student.destroy');
 
     Route::get('/previous-exam', [ExamResultController::class, 'index'])->name('result.index');
 
