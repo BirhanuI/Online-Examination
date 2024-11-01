@@ -7,7 +7,9 @@ import AddStudent from "./AddStudent";
 import { useState } from "react";
 const StudentIndex = ({ auth, students }) => {
     function handleDelete(id) {
-        router.delete(`/exam/${id}`);
+        if (confirm(`Are you sure you want to delete student ${students.find((s) => s.id === id).full_name}?`)) {
+            router.delete(`/student/${id}`);
+        }
     }
 
     const examColumn = [
@@ -40,9 +42,10 @@ const StudentIndex = ({ auth, students }) => {
                 <div className="">
                     <Tooltip title="Edit Exam" placement="top">
                         <IconButton
-                            onClick={() =>
-                                router.get(`/exam/${row.original.id}`)
-                            }
+                            onClick={() => {
+                                setStudent(row.original);
+                                setShowAddStudent(true);
+                            }}
                         >
                             <Edit fontSize="small" />
                         </IconButton>
@@ -59,18 +62,26 @@ const StudentIndex = ({ auth, students }) => {
             size: 150,
         },
     ];
+    const [student, setStudent] = useState(null);
     const [showAddStudent, setShowAddStudent] = useState(false);
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Students" />
-            <AddStudent show={showAddStudent} onClose={setShowAddStudent} />
+            <AddStudent
+                student={student}
+                show={showAddStudent}
+                onClose={setShowAddStudent}
+            />
             <div className="p-5 flex flex-col gap-5">
                 <div className="p-10 bg-white flex border rounded shadow-lg flex-col gap-10">
                     <div className="flex justify-between items-center text-lg w-full ">
                         <p className="font-space text-gray-800">Students</p>
                         <Button
                             variant="contained"
-                            onClick={() => setShowAddStudent(true)}
+                            onClick={() => {
+                                setStudent(null);
+                                setShowAddStudent(true);
+                            }}
                         >
                             <Add fontSize="medium" />
                             Add Student

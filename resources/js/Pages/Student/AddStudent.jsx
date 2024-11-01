@@ -16,33 +16,64 @@ import {
 } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import { useEffect } from "react";
 import { toast } from "react-toastify";
 
-const AddStudent = ({ show, onClose }) => {
-    const { data, setData, errors, reset, setError, post } = useForm({
-        first_name: "",
-        last_name: "",
-        email: "",
-        phone: "",
-        address: "",
-        grade: "",
-        city: "",
-        state: "",
-        gender: "female",
-        date_of_birth: dayjs().format("YYYY-MM-DD"),
+const AddStudent = ({ show, onClose, student }) => {
+    const { data, setData, errors, reset, setError, post, put } = useForm({
+        first_name: student ? student.first_name : "",
+        last_name: student ? student.last_name : "",
+        email: student ? student.email : "",
+        phone: student ? student.phone : "",
+        address: student ? student.address : "",
+        grade: student ? student.grade : "",
+        city: student ? student.city : "",
+        state: student ? student.state : "",
+        gender: student ? student.gender : "female",
+        date_of_birth: student
+            ? dayjs(student.date_of_birth).format("YYYY-MM-DD")
+            : dayjs().format("YYYY-MM-DD"),
     });
-
+    useEffect(() => {
+        if (student) {
+            setData({
+                first_name: student.first_name,
+                last_name: student.last_name,
+                email: student.user?student.user.email:'',
+                phone: student.phone,
+                address: student.address,
+                grade: student.grade,
+                city: student.city,
+                state: student.state,
+                gender: student.gender,
+                date_of_birth: dayjs(student.date_of_birth).format(
+                    "YYYY-MM-DD"
+                ),
+            });
+        } else reset();
+    }, [student]);
     function handleSubmit(e) {
         e.preventDefault();
-        post(route("student.store"), {
-            onSuccess: () => {
-                reset();
-                toast.success("Student added successfully");
-                onclose(false);
-            },
-        });
-        // console.log(data);
+        if (student) {
+            put(route("student.update", student.id), {
+                onSuccess: () => {
+                    reset();
+                    toast.success("Student updated successfully");
+                    onclose(false);
+                },
+            });
+        } else {
+            post(route("student.store"), {
+                onSuccess: () => {
+                    reset();
+                    toast.success("Student added successfully");
+                    onclose(false);
+                },
+            });
+        }
+        // console.log();
     }
+    // if (student) return <div className="">nothing</div>;
     return (
         <Modal show={show} onClose={onClose}>
             <h2 className="p-5 pb-0 text-center text-2xl font-bold">
@@ -72,7 +103,7 @@ const AddStudent = ({ show, onClose }) => {
                 </div>
                 <TextField
                     fullWidth
-                    label="Username"
+                    label="Email"
                     value={data.email}
                     onChange={(e) => setData("email", e.target.value)}
                     error={errors.email}
@@ -169,11 +200,15 @@ const AddStudent = ({ show, onClose }) => {
                     />
                 </div>
                 <div className="flex gap-5 justify-end">
-                    <Button variant="contained" color="error">
+                    <Button
+                        variant="contained"
+                        color="error"
+                        onClick={() => reset()}
+                    >
                         cancel
                     </Button>
                     <Button type="submit" variant="contained">
-                        submit
+                        {student ? "update" : "submit"}
                     </Button>
                 </div>
             </form>

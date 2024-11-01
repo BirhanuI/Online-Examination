@@ -15,7 +15,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $student = Student::latest()->get();
+        $student = Student::with('user')->latest()->get();
         return Inertia::render('Student/Student', ['students' => $student]);
     }
 
@@ -83,7 +83,38 @@ class StudentController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $student = Student::find($id);
+        if (!$student) return;
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required',
+            'phone' => 'nullable',
+            'grade' => 'required',
+            'date_of_birth' => 'required|date',
+            'gender' => 'required|in:male,female',
+            'address' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+        ]);
+        DB::transaction(function () use ($request,$id) {
+            $student = Student::find($id);
+            $student->update(
+                [
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'phone' => $request->phone,
+                    'grade' => $request->grade,
+                    'date_of_birth' => $request->date_of_birth,
+                    'gender' => $request->gender,
+                    'address' => $request->address,
+                    'city' => $request->city,
+                    'state' => $request->state,
+                    ]
+                );
+                // dd($student);
+                User::where('id', $student->user_id)->update(['name' => $request->first_name . ' ' . $request->last_name, 'email' => $request->email]);
+            });
     }
 
     /**
@@ -91,6 +122,7 @@ class StudentController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $student = Student::find($id);
+        if ($student) $student->delete();
     }
 }
