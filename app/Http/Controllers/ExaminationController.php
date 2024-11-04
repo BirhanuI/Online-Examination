@@ -6,6 +6,7 @@ use App\Models\Attempts;
 use App\Models\Exam;
 use App\Models\Question;
 use App\Models\Response;
+use App\Models\Student;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,10 +16,15 @@ class ExaminationController extends Controller
 {
     public function index()
     {
-        $exams = Exam::with('schedule')->whereHas('schedule', function ($query) {
-            $query->where('date', '>', Carbon::now()->subDay());
+        $userId = Auth::id();
+        $student = Student::where('user_id', $userId)->first();
+        if (!$student) {
+            return ;
+        }
+        // dd($student->grade);
+        $exams = Exam::with('schedule')->where('grade', $student->grade)->whereHas('schedule', function ($query) {
+            $query->where('date', '>', Carbon::now()->subMinutes(30));
         })->withCount('questions')->get();
-        // dd($exams);
         return Inertia::render('ExamPage/Index', ['exams' => $exams]);
     }
     public function store(Request $request)
@@ -46,7 +52,7 @@ class ExaminationController extends Controller
     }
     public function getTime()
     {
-       $date =  Carbon::now()->setTimezone('America/New_York');
+        $date =  Carbon::now()->setTimezone('America/New_York');
         return response()->json(['time' => $date]);
     }
 }

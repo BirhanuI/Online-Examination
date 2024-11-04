@@ -18,8 +18,9 @@ import {
 import { toast } from "react-toastify";
 import { Add, ArrowDropDown, Remove } from "@mui/icons-material";
 import { useState } from "react";
+import AddSubject from "./addSubject";
 
-const CreateExam = ({ auth, exam }) => {
+const CreateExam = ({ auth, exam, subject }) => {
     const ExamForm = useForm({
         title: exam ? exam.title : "",
         description: exam ? exam.description : "",
@@ -28,7 +29,9 @@ const CreateExam = ({ auth, exam }) => {
         duration: exam ? exam.duration : "",
         subject_id: exam ? exam.subject_id : "",
         grade: exam ? exam.grade : "",
-        questions: exam? exam.questions: [
+        questions: exam
+            ? exam.questions
+            : [
                   {
                       question: "",
                       option1: "",
@@ -40,11 +43,6 @@ const CreateExam = ({ auth, exam }) => {
                   },
               ],
     });
-    const subject = [
-        { name: "Biology", id: "1" },
-        { name: "Chemistry", id: "2" },
-        { name: "Physics", id: "3" },
-    ];
     const handleSubmit = (e) => {
         e.preventDefault();
         if (exam) {
@@ -115,9 +113,11 @@ const CreateExam = ({ auth, exam }) => {
         });
     };
     const [expanded, setExpanded] = useState(0);
+    const [showSubjectModal, setShowSubjectModal] = useState(false);
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Add Exam" />
+            <AddSubject show={showSubjectModal} onClose={setShowSubjectModal} />
             <div className="w-full p-5">
                 <div className=" rounded-md gap-5">
                     <form
@@ -129,6 +129,15 @@ const CreateExam = ({ auth, exam }) => {
                                 <p className="font-space text-lg font-semibold">
                                     Exam Details
                                 </p>
+                                <TextField
+                                    label="Grade"
+                                    fullWidth
+                                    type="number"
+                                    error={ExamForm.errors.grade}
+                                    helperText={ExamForm.errors.grade}
+                                    value={ExamForm.data.grade}
+                                    onChange={(e) => ExamForm.setData("grade",e.target.value)}
+                                />
                                 <FormControl
                                     fullWidth
                                     error={ExamForm.errors.subject_id}
@@ -144,6 +153,14 @@ const CreateExam = ({ auth, exam }) => {
                                             )
                                         }
                                     >
+                                        <MenuItem
+                                            value=""
+                                            onClick={() =>
+                                                setShowSubjectModal(true)
+                                            }
+                                        >
+                                           <div className="text-gray-400"><Add /> add Subject</div> 
+                                        </MenuItem>
                                         {subject.map((subject) => (
                                             <MenuItem
                                                 key={subject.id}

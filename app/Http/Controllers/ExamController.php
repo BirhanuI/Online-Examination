@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Exam;
 use App\Models\ExamSchedule;
+use App\Models\Subject;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +16,7 @@ class ExamController extends Controller
     public function index()
     {
         $exams = Exam::with('schedule')->latest()->get();
+
         return Inertia::render('ExamAdmin/Index', ['exams' => $exams]);
     }
     public function store(Request $request)
@@ -23,6 +25,7 @@ class ExamController extends Controller
             'title' => ['required', 'bail', 'min:3'],
             'description' => [''],
             'subject_id' => 'required',
+            'grade' => 'required',
             'duration' => ['required', 'bail'],
             'questions.*.question' => ['required', 'bail',],
             'questions.*.option1' => ['required', 'bail',],
@@ -48,13 +51,14 @@ class ExamController extends Controller
     }
     public function create()
     {
-        return Inertia::render('ExamAdmin/CreateExam');
+        $subject = Subject::all();
+        return Inertia::render('ExamAdmin/CreateExam', ['subject' => $subject]);
     }
     public function edit(string $id)
     {
         $exam = Exam::find($id)->load('questions');
         // dd($exam);
-        return Inertia::render('ExamAdmin/CreateExam', ['exam' => $exam]);
+        return Inertia::render('ExamAdmin/CreateExam', ['exam' => $exam, 'subject' => Subject::all()]);
     }
     public function update(Request $request, string $id)
     {
@@ -62,6 +66,7 @@ class ExamController extends Controller
             'title' => ['required', 'bail', 'min:3'],
             'description' => [''],
             'subject_id' => 'required',
+            'grade' => 'required',
             'duration' => ['required', 'bail'],
             'questions.*.question' => ['required', 'bail',],
             'questions.*.option1' => ['required', 'bail',],
@@ -110,7 +115,7 @@ class ExamController extends Controller
         $date = $date . ' ' . $dateTime->format('H:i:s');
         $carbonDate = Carbon::createFromFormat('Y-m-d H:i:s', $date, 'Africa/Addis_Ababa');
         $date = $carbonDate->setTimezone('UTC');
-        $exam->schedule()->create(['date'=>$date,'time'=>$time]);
+        $exam->schedule()->create(['date' => $date, 'time' => $time]);
         $exam->save();
     }
 }

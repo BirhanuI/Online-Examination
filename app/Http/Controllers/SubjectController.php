@@ -2,21 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Attempts;
+use App\Models\Subject;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
 
-class ExamResultController extends Controller
+class SubjectController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $exams = Attempts::with('exam')->where('user_id', Auth::id())->get();
-
-        return Inertia::render('ExamResult/ExamResult',['exams'=>$exams]);
+        $subjects = Subject::latest()->get();
+        return response()->json($subjects);
     }
 
     /**
@@ -28,11 +25,17 @@ class ExamResultController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created subject in storage.
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required|unique:subjects|max:255',
+        ]);
+
+        Subject::create([
+            'name' => $validatedData['name'],
+        ]);
     }
 
     /**
@@ -64,6 +67,9 @@ class ExamResultController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $subject = Subject::find($id);
+        if ($subject) {
+            $subject->delete();
+        }
     }
 }

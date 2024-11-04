@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Student;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,9 +19,15 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+        $user = Auth::user();
+        $student = Student::where('user_id', $user->id)->first();
+        if($student == null) {
+            $student = null;
+        }
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
+            'student' => $student
         ]);
     }
 

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Attempts extends Model
 {
@@ -17,4 +18,8 @@ class Attempts extends Model
         'start_date',
         'end_date',
     ];
+    public function exam():BelongsTo
+    {
+        return $this->belongsTo(Exam::class);
+    }
 }

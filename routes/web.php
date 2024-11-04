@@ -6,6 +6,7 @@ use App\Http\Controllers\ExamResultController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\SubjectController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -40,6 +41,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('student', StudentController::class)->name('student.index', 'student.create', 'student.store', 'student.edit', 'student.update', 'student.destroy');
 
     Route::get('/previous-exam', [ExamResultController::class, 'index'])->name('result.index');
+
+
+    Route::post('/subject', [SubjectController::class, 'store'])->name('subject.store');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

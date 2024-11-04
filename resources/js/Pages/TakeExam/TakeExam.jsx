@@ -15,8 +15,27 @@ import { Link, router } from "@inertiajs/react";
 import CountDown from "@/Components/CountDown";
 import Modal from "@/Components/Modal";
 import { toast } from "react-toastify";
-
+import { useEffect } from "react";
 const TakeExam = ({ auth, exam, questions }) => {
+    // const history = useHistory();
+    useEffect(() => {
+        window.history.pushState(null, "", window.location.href);
+        // window.onpopstate = handlePopState;
+
+        // Warn user on page unload
+        const handleBeforeUnload = (e) => {
+            e.preventDefault();
+            e.returnValue = ""; // Display a warning message
+        };
+
+        window.addEventListener("beforeunload", handleBeforeUnload);
+
+        // Cleanup function
+        return () => {
+            window.onpopstate = null; // Remove the handler
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+    }, []);
     var sliderRef = useRef(null);
     let next = () => {
         sliderRef.slickNext();
@@ -59,203 +78,217 @@ const TakeExam = ({ auth, exam, questions }) => {
     time.setMinutes(time.getMinutes() + Number(exam.duration));
     return (
         <AuthenticatedLayout user={auth.user}>
-            <TimeExpiryModal show={showExpiryModal} />
-            <Modal show={showInstructionModal}>
-                <div className="p-5 overflow-y-auto max-h-96">
-                    <p className="text-center p-5 font-bold">
-                        Please review your answers carefully. Once you submit,
-                        you will not be able to change your responses.
-                    </p>
-                    <div className="flex flex-col gap-2">
-                        {questions.map((question, index) => (
-                            <div className="bg-slate-50 p-3 rounded-md cursor-pointer">
-                                <div>
-                                    #{index + 1}) {question.question}
-                                </div>
-                                <div className="">
-                                    <span>Your answer: </span>
-                                    {question[answer[question.id]] || (
-                                        <span className="text-red-500">
-                                            Not Answerd
-                                        </span>
-                                    )}
-                                </div>
-                                <div className="flex justify-end">
-                                    <Button
-                                        size="small"
-                                        onClick={() => {
-                                            setShowInstructionModal(false);
-                                            sliderRef.slickGoTo(index);
-                                        }}
-                                    >
-                                        Go to the question
-                                    </Button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                    <div className="flex justify-end mt-10">
-                        <Button
-                            variant="contained"
-                            onClick={handleSubmit}
-                            fullWidth
-                        >
-                            Submit
-                        </Button>
-                    </div>
-                </div>
-            </Modal>
-            <div className="w-full flex gap-5 p-5 ">
-                <div className="w-4/6 p-5  shadow-md rounded-md bg-white">
-                    <h1 className="font-space text-lg font-semibold">
-                        {exam.title}
-                    </h1>
-                    <div className="flex flex-col w-full">
-                        <Slider
-                            {...settings}
-                            ref={(slider) => {
-                                sliderRef = slider;
-                            }}
-                        >
+            <div className="absolute top-0 left-0 right-0 bottom-0 z-10 bg-black opacity-40"></div>
+            <div className="relative z-20">
+                <TimeExpiryModal show={showExpiryModal} />
+                <Modal show={showInstructionModal}>
+                    <div className="p-5 overflow-y-auto max-h-96">
+                        <p className="text-center p-5 font-bold">
+                            Please review your answers carefully. Once you
+                            submit, you will not be able to change your
+                            responses.
+                        </p>
+                        <div className="flex flex-col gap-2">
                             {questions.map((question, index) => (
-                                <div className="w-full">
-                                    <div className="p-5 py-10 font-space">
-                                        {index + 1}) {question.question}
+                                <div className="bg-slate-50 p-3 rounded-md cursor-pointer">
+                                    <div>
+                                        #{index + 1}) {question.question}
                                     </div>
-                                    <div className="flex gap-5 w-full px-10">
-                                        <div className="w-full flex flex-col gap-5">
-                                            <div className="flex items-center p-2 py-0 border rounded-md w-full">
-                                                <FormControlLabel
-                                                    control={
-                                                        <Checkbox
-                                                            onChange={() =>
-                                                                handleAnswerChange(
-                                                                    question.id,
-                                                                    "option1"
-                                                                )
-                                                            }
-                                                            checked={
-                                                                answer[
-                                                                    question.id
-                                                                ] === "option1"
-                                                            }
-                                                        />
-                                                    }
-                                                    label={question.option1}
-                                                />
-                                            </div>
-                                            <div className="flex items-center p-2 py-0 border rounded-md w-full">
-                                                <FormControlLabel
-                                                    control={
-                                                        <Checkbox
-                                                            onChange={() =>
-                                                                handleAnswerChange(
-                                                                    question.id,
-                                                                    "option2"
-                                                                )
-                                                            }
-                                                            checked={
-                                                                answer[
-                                                                    question.id
-                                                                ] === "option2"
-                                                            }
-                                                        />
-                                                    }
-                                                    label={question.option2}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="w-full flex flex-col gap-5">
-                                            <div className="flex items-center p-2 py-0 border rounded-md w-full">
-                                                <FormControlLabel
-                                                    control={
-                                                        <Checkbox
-                                                            onChange={() =>
-                                                                handleAnswerChange(
-                                                                    question.id,
-                                                                    "option3"
-                                                                )
-                                                            }
-                                                            checked={
-                                                                answer[
-                                                                    question.id
-                                                                ] === "option3"
-                                                            }
-                                                        />
-                                                    }
-                                                    label={question.option3}
-                                                />
-                                            </div>
-                                            <div className="flex items-center p-2 py-0 border rounded-md w-full">
-                                                <FormControlLabel
-                                                    control={
-                                                        <Checkbox
-                                                            onChange={() =>
-                                                                handleAnswerChange(
-                                                                    question.id,
-                                                                    "option4"
-                                                                )
-                                                            }
-                                                            checked={
-                                                                answer[
-                                                                    question.id
-                                                                ] === "option4"
-                                                            }
-                                                        />
-                                                    }
-                                                    label={question.option4}
-                                                />
-                                            </div>
-                                        </div>
+                                    <div className="">
+                                        <span>Your answer: </span>
+                                        {question[answer[question.id]] || (
+                                            <span className="text-red-500">
+                                                Not Answerd
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div className="flex justify-end">
+                                        <Button
+                                            size="small"
+                                            onClick={() => {
+                                                setShowInstructionModal(false);
+                                                sliderRef.slickGoTo(index);
+                                            }}
+                                        >
+                                            Go to the question
+                                        </Button>
                                     </div>
                                 </div>
                             ))}
-                        </Slider>
+                        </div>
+                        <div className="flex justify-end mt-10">
+                            <Button
+                                variant="contained"
+                                onClick={handleSubmit}
+                                fullWidth
+                            >
+                                Submit
+                            </Button>
+                        </div>
                     </div>
-                    <div className="flex gap-5 p-10 justify-around items-center">
-                        <IconButton onClick={previous}>
-                            <ArrowBackIos />
-                        </IconButton>
-                        {questions.length - 1 == currentQuestionIndex ? (
+                </Modal>
+                <div className="w-full flex gap-5 p-5 ">
+                    <div className="w-4/6 p-5  shadow-md rounded-md bg-white">
+                        <h1 className="font-space text-lg font-semibold">
+                            {exam.title}
+                        </h1>
+                        <div className="flex flex-col w-full">
+                            <Slider
+                                {...settings}
+                                ref={(slider) => {
+                                    sliderRef = slider;
+                                }}
+                            >
+                                {questions.map((question, index) => (
+                                    <div className="w-full">
+                                        <div className="p-5 py-10 font-space">
+                                            {index + 1}) {question.question}
+                                        </div>
+                                        <div className="flex gap-5 w-full px-10">
+                                            <div className="w-full flex flex-col gap-5">
+                                                <div className="flex items-center p-2 py-0 border rounded-md w-full">
+                                                    <FormControlLabel
+                                                        control={
+                                                            <Checkbox
+                                                                onChange={() =>
+                                                                    handleAnswerChange(
+                                                                        question.id,
+                                                                        "option1"
+                                                                    )
+                                                                }
+                                                                checked={
+                                                                    answer[
+                                                                        question
+                                                                            .id
+                                                                    ] ===
+                                                                    "option1"
+                                                                }
+                                                            />
+                                                        }
+                                                        label={question.option1}
+                                                    />
+                                                </div>
+                                                <div className="flex items-center p-2 py-0 border rounded-md w-full">
+                                                    <FormControlLabel
+                                                        control={
+                                                            <Checkbox
+                                                                onChange={() =>
+                                                                    handleAnswerChange(
+                                                                        question.id,
+                                                                        "option2"
+                                                                    )
+                                                                }
+                                                                checked={
+                                                                    answer[
+                                                                        question
+                                                                            .id
+                                                                    ] ===
+                                                                    "option2"
+                                                                }
+                                                            />
+                                                        }
+                                                        label={question.option2}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="w-full flex flex-col gap-5">
+                                                <div className="flex items-center p-2 py-0 border rounded-md w-full">
+                                                    <FormControlLabel
+                                                        control={
+                                                            <Checkbox
+                                                                onChange={() =>
+                                                                    handleAnswerChange(
+                                                                        question.id,
+                                                                        "option3"
+                                                                    )
+                                                                }
+                                                                checked={
+                                                                    answer[
+                                                                        question
+                                                                            .id
+                                                                    ] ===
+                                                                    "option3"
+                                                                }
+                                                            />
+                                                        }
+                                                        label={question.option3}
+                                                    />
+                                                </div>
+                                                <div className="flex items-center p-2 py-0 border rounded-md w-full">
+                                                    <FormControlLabel
+                                                        control={
+                                                            <Checkbox
+                                                                onChange={() =>
+                                                                    handleAnswerChange(
+                                                                        question.id,
+                                                                        "option4"
+                                                                    )
+                                                                }
+                                                                checked={
+                                                                    answer[
+                                                                        question
+                                                                            .id
+                                                                    ] ===
+                                                                    "option4"
+                                                                }
+                                                            />
+                                                        }
+                                                        label={question.option4}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </Slider>
+                        </div>
+                        <div className="flex gap-5 p-10 justify-around items-center">
+                            <IconButton onClick={previous}>
+                                <ArrowBackIos />
+                            </IconButton>
+
+                            <IconButton onClick={next}>
+                                <ArrowForwardIos />
+                            </IconButton>
+                        </div>
+                        <div className="flex justify-end pr-10">
                             <Button
                                 variant="contained"
                                 onClick={() => setShowInstructionModal(true)}
                             >
                                 Submit
                             </Button>
-                        ) : (
-                            <IconButton onClick={next}>
-                                <ArrowForwardIos />
-                            </IconButton>
-                        )}
+                        </div>
                     </div>
-                </div>
-                <div className="w-2/6 p-10 shadow-md rounded-md bg-white flex flex-col gap-5">
-                    <div className="">
-                        <CountDown
-                            expiryTimestamp={time}
-                            onExpireFn={handleTimeExpiry}
-                        />
-                    </div>
-                    <div className="flex justify-center flex-col mt-5 items-center">
-                        <div className="text-xl">Questions</div>
-                        <div className="flex flex-wrap justify-center mt-2">
-                            {questions.map((question, index) => (
-                                <div
-                                    onClick={() => sliderRef.slickGoTo(index)}
-                                    className={`cursor-pointer w-9 h-9 ${
-                                        answer[question.id]
-                                            ? "bg-green-500"
-                                            : ""
-                                    } bg-gray-800 text-white font-space border flex justify-center items-center ${
-                                        index + 1 === questions.length
-                                            ? "rounded-r-md"
-                                            : ""
-                                    } ${index === 0 ? "rounded-l-md" : ""}`}
-                                >
-                                    {index + 1}
-                                </div>
-                            ))}
+                    <div className="w-2/6 p-10 shadow-md rounded-md bg-white flex flex-col gap-5">
+                        <div className="">
+                            <CountDown
+                                expiryTimestamp={time}
+                                onExpireFn={handleTimeExpiry}
+                            />
+                        </div>
+                        <div className="flex justify-center flex-col mt-5 items-center">
+                            <div className="text-xl">Questions</div>
+                            <div className="flex flex-wrap justify-center mt-2">
+                                {questions.map((question, index) => (
+                                    <div
+                                        onClick={() =>
+                                            sliderRef.slickGoTo(index)
+                                        }
+                                        className={`cursor-pointer w-9 h-9 ${
+                                            answer[question.id]
+                                                ? "bg-green-500"
+                                                : ""
+                                        } bg-gray-800 text-white font-space border flex justify-center items-center ${
+                                            index + 1 === questions.length
+                                                ? "rounded-r-md"
+                                                : ""
+                                        } ${index === 0 ? "rounded-l-md" : ""}`}
+                                    >
+                                        {index + 1}
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>

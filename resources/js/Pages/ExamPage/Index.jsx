@@ -9,6 +9,7 @@ const Index = ({ auth, exams }) => {
     const [selectedExam, setSelectedExam] = useState(null);
     return (
         <AuthenticatedLayout user={auth.user}>
+            
             {exams.length === 0 ? (
                 <div className="flex justify-center items-center h-full p-20">
                     <h1 className="text-3xl font-bold font-space">
@@ -35,7 +36,9 @@ const Index = ({ auth, exams }) => {
                                 </p>
                                 <p className="">
                                     Time:{" "}
-                                    {dayjs(exam.schedule.date).subtract(3, "h").format("h:mm A")}
+                                    {dayjs(exam.schedule.date)
+                                        .subtract(3, "h")
+                                        .format("h:mm A")}
                                 </p>
                                 <p className="">
                                     Duration: {exam.duration} min
@@ -75,9 +78,7 @@ const Index = ({ auth, exams }) => {
                                     Total Questions:{" "}
                                     {selectedExam?.questions_count}
                                 </li>
-                                <li>
-                                    Please read all instructions carefully.
-                                </li>
+                                <li>Please read all instructions carefully.</li>
                                 <li>Ensure stable internet connection.</li>
                                 <li>Keep ID card ready.</li>
                             </ul>
@@ -116,6 +117,7 @@ const Index = ({ auth, exams }) => {
                                 }
                             >
                                 <Link
+                                    target="_blank"
                                     href={route(`take-exam.index`, {
                                         id: selectedExam.id,
                                         title: selectedExam.title,

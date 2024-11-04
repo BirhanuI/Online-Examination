@@ -26,15 +26,15 @@ const Index = ({ auth, exams }) => {
         {
             accessorKey: "title",
             header: "Exam Title",
-            size: 150,
+            size: 200,
             grow: true,
         },
-        {
-            accessorKey: "description",
-            header: "Exam Description",
-            minSize: 150,
-            grow: true,
-        },
+        // {
+        //     accessorKey: "description",
+        //     header: "Exam Description",
+        //     minSize: 150,
+        //     grow: true,
+        // },
         {
             accessorKey: "duration",
             header: "Duration",
@@ -43,6 +43,11 @@ const Index = ({ auth, exams }) => {
         {
             accessorKey: "subject_id",
             header: "Subject",
+            size: 100,
+        },
+        {
+            accessorKey: "grade",
+            header: "Grade",
             size: 100,
         },
         {

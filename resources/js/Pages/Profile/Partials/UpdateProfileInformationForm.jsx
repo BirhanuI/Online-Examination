@@ -28,8 +28,16 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                     Update your account's profile information and email address.
                 </p>
             </header>
+            <div className="">
+                <p className="mt-6 text-sm text-gray-600">
+                    <span className="font-semibold">Name:</span> {user.name}
+                </p>
+                <p className="mt-1 text-sm text-gray-600">
+                    <span className="font-semibold">Email:</span> {user.email}
+                </p>
+            </div>
 
-            <form onSubmit={submit} className="mt-6 space-y-6">
+            {/* <form onSubmit={submit} className="mt-6 space-y-6">
                 <div>
                     <InputLabel htmlFor="name" value="Name" />
 
@@ -97,7 +105,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                         <p className="text-sm text-gray-600">Saved.</p>
                     </Transition>
                 </div>
-            </form>
+            </form> */}
         </section>
     );
 }
