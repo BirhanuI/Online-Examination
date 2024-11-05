@@ -19,7 +19,7 @@ class ExaminationController extends Controller
         $userId = Auth::id();
         $student = Student::where('user_id', $userId)->first();
         if (!$student) {
-            return ;
+            return;
         }
         // dd($student->grade);
         $exams = Exam::with('schedule')->where('grade', $student->grade)->whereHas('schedule', function ($query) {
@@ -42,8 +42,15 @@ class ExaminationController extends Controller
             }
         }
         Attempts::create(['user_id' => Auth::id(), 'exam_id' => $request->exam_id, 'score' => $result, 'start_date' => now(), 'end_date' => now()]);
-        // $exams = Exam::latest()->get();
-        // return Inertia::render('ExamPage/Index', ['exams' => $exams]);
+        $userId = Auth::id();
+        $student = Student::where('user_id', $userId)->first();
+        if (!$student) {
+            return;
+        }
+        $exams = Exam::with('schedule')->where('grade', $student->grade)->whereHas('schedule', function ($query) {
+            $query->where('date', '>', Carbon::now()->subMinutes(30));
+        })->withCount('questions')->get();
+        return Inertia::render('ExamPage/Index', ['exams' => $exams]);
     }
     public function takeExam(Request $request)
     {
