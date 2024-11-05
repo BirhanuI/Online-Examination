@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -19,6 +20,11 @@ class Exam extends Model
         'duration',
         'grade',
     ];
+    protected $appends = ['subject_name'];
+    public function subject():BelongsTo
+    {
+        return $this->belongsTo(Subject::class);
+    }
     public function questions():HasMany
     {
         return $this->hasMany(Question::class);
@@ -31,6 +37,11 @@ class Exam extends Model
     public function schedule():HasOne
     {
         return $this->hasOne(ExamSchedule::class);
+    }
+
+    public function getSubjectNameAttribute()
+    {
+        return $this->subject->name;
     }
 
 }

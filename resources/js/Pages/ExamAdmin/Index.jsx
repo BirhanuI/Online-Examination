@@ -41,7 +41,7 @@ const Index = ({ auth, exams }) => {
             size: 100,
         },
         {
-            accessorKey: "subject_id",
+            accessorKey: "subject_name",
             header: "Subject",
             size: 100,
         },

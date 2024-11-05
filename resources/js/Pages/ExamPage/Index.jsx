@@ -28,6 +28,10 @@ const Index = ({ auth, exams }) => {
                                 {exam.title}
                             </h1>
                             <div className="flex w-full flex-col p-5">
+                            <p className="">
+                                    Subject:{" "}
+                                    {exam.subject_name}
+                                </p>
                                 <p className="">
                                     Date:{" "}
                                     {dayjs(exam.schedule.date).format(
@@ -44,7 +48,7 @@ const Index = ({ auth, exams }) => {
                                     Duration: {exam.duration} min
                                 </p>
                                 <p>
-                                    Remaining:{" "}
+                                    {/* Remaining:{" "} */}
                                     {/* {dayjs.duration(dayjs().diff(exam.schedule.date)).minutes()} */}
                                 </p>
                             </div>
