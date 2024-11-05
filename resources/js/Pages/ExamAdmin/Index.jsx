@@ -58,13 +58,13 @@ const Index = ({ auth, exams }) => {
                 <div className="">
                     <Button
                         variant="contained"
-                        disabled={row.original.schedule?true:false}
+                        // disabled={row.original.schedule?true:false}
                         onClick={() => {
                             setExamId(row.original.id);
                             setShowScheduleModal(true);
                         }}
-                    >
-                        schedule exam
+                        color={row.original.schedule?"warning":"primary"}
+                    >{row.original.schedule?"reschedule":"Schedule"}
                     </Button>
                 </div>
             ),

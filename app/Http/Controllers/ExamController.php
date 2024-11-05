@@ -115,7 +115,12 @@ class ExamController extends Controller
         $date = $date . ' ' . $dateTime->format('H:i:s');
         $carbonDate = Carbon::createFromFormat('Y-m-d H:i:s', $date, 'Africa/Addis_Ababa');
         $date = $carbonDate->setTimezone('UTC');
+
+        $existingSchedule = $exam->schedule()->first();
+        if ($existingSchedule) {
+            $existingSchedule->update(['date' => $date, 'time' => $time]);
+        } else {
         $exam->schedule()->create(['date' => $date, 'time' => $time]);
-        $exam->save();
+        }
     }
 }
