@@ -16,6 +16,7 @@ import CountDown from "@/Components/CountDown";
 import Modal from "@/Components/Modal";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
+import { MathJax, MathJaxContext } from "better-react-mathjax";
 const TakeExam = ({ auth, exam, questions }) => {
     // const history = useHistory();
     useEffect(() => {
@@ -141,8 +142,17 @@ const TakeExam = ({ auth, exam, questions }) => {
                             >
                                 {questions.map((question, index) => (
                                     <div className="w-full">
-                                        <div className="p-5 py-10 font-space">
-                                            {index + 1}) {question.question}
+                                        <div className="p-5 py-10 font-space flex gap-2">
+                                            {index + 1}) {" "}
+                                            <MathJaxContext>
+                                                <MathJax>
+                                                    <p
+                                                        dangerouslySetInnerHTML={{
+                                                            __html: question.question,
+                                                        }}
+                                                    ></p>
+                                                </MathJax>
+                                            </MathJaxContext>
                                         </div>
                                         <div className="flex gap-5 w-full px-10">
                                             <div className="w-full flex flex-col gap-5">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attempts;
+use App\Models\Exam;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -14,9 +15,9 @@ class ExamResultController extends Controller
      */
     public function index()
     {
-        $exams = Attempts::with('exam')->where('user_id', Auth::id())->get();
+        $exams = Attempts::with('exam')->where('user_id', Auth::id())->whereHas('exam')->get();
 
-        return Inertia::render('ExamResult/ExamResult',['exams'=>$exams]);
+        return Inertia::render('ExamResult/ExamResult', ['exams' => $exams]);
     }
 
     /**
@@ -38,9 +39,23 @@ class ExamResultController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request, string $examId)
     {
-        //
+        $userId = Auth::id();
+        $exam = Exam::find($examId);
+
+        if (!$exam) {
+            return response()->json(['error' => 'Exam not found'], 404);
+        }
+        $exam->load(['questions' => function ($query) {
+            $query->select('id', 'exam_id', 'question', 'option1', 'option2', 'option3', 'option4', 'answer');
+        }, 'questions.responses' => function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        }]);
+        // $attempts = Attempts::where('exam_id',)
+        return Inertia::render('ExamResult/Show', [
+            'exam' => $exam,'score'=> $request->score
+        ]);
     }
 
     /**

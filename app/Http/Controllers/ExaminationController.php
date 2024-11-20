@@ -29,7 +29,6 @@ class ExaminationController extends Controller
     }
     public function store(Request $request)
     {
-        // dd($request->answers);
         $request->validate([
             'exam_id' => "required|exists:exams,id"
         ]);

@@ -41,6 +41,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('student', StudentController::class)->name('student.index', 'student.create', 'student.store', 'student.edit', 'student.update', 'student.destroy');
 
     Route::get('/previous-exam', [ExamResultController::class, 'index'])->name('result.index');
+    Route::get('/previous-exam/{id}', [ExamResultController::class, 'show'])->name('result.show');
 
 
     Route::post('/subject', [SubjectController::class, 'store'])->name('subject.store');

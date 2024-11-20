@@ -27,10 +27,16 @@ const ExamResult = ({ auth, exams }) => {
                             <p className="">
                                 Duration: {exam.exam.duration} min
                             </p>
+                            <p className="">Total Marks: {exam.score}</p>
                         </div>
                         <div className="flex w-full flex-col items-center cursor-default">
-                            <p className="">Total Marks</p>
-                            <h1 className="text-2xl bg-orange-500 px-5 rounded-md"> {exam.score}</h1>
+                            <Link
+                                href={route("result.show", exam.exam_id)}
+                            >
+                                <Button variant="contained" color="warning">
+                                    View
+                                </Button>
+                            </Link>
                         </div>
                     </div>
                 ))}

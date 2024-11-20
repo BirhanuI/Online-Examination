@@ -1,5 +1,4 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import * as React from "react";
 import { Head, useForm } from "@inertiajs/react";
 import {
     Accordion,
@@ -17,10 +16,24 @@ import {
 } from "@mui/material";
 import { toast } from "react-toastify";
 import { Add, ArrowDropDown, Remove } from "@mui/icons-material";
-import { useState } from "react";
+import React, { useState, useMemo, useCallback  } from "react";
 import AddSubject from "./addSubject";
+import { MathJax, MathJaxContext } from "better-react-mathjax";
+import MathEditor from "@/Components/MathEditor";
+
+
+
+
 
 const CreateExam = ({ auth, exam, subject }) => {
+    const config = {
+        loader: { load: ['input/asciimath', 'output/chtml'] },
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            processEscapes: true,
+        }
+    };
     const ExamForm = useForm({
         title: exam ? exam.title : "",
         description: exam ? exam.description : "",
@@ -126,7 +139,7 @@ const CreateExam = ({ auth, exam, subject }) => {
                     >
                         <div className="flex w-full gap-5">
                             <div className="w-[30%] flex flex-col gap-5 bg-white p-5 py-10 rounded-md shadow-md">
-                                <p className="font-space text-lg font-semibold">
+                                <p className="font-space text-lg font-">
                                     Exam Details
                                 </p>
                                 <TextField
@@ -263,7 +276,10 @@ const CreateExam = ({ auth, exam, subject }) => {
                                                     </AccordionSummary>
                                                     <AccordionDetails>
                                                         <div className="">
-                                                            <TextField
+                                                            <MathJaxContext config={config}>
+                                                                <MathEditor onChange={(equations) => handleQuestionChange(index, "question", equations)}/>
+                                                            </MathJaxContext>
+                                                            {/* <TextField
                                                                 error={
                                                                     ExamForm
                                                                         .errors[
@@ -284,15 +300,16 @@ const CreateExam = ({ auth, exam, subject }) => {
                                                                             .value
                                                                     )
                                                                 }
-                                                                value={
-                                                                    question.question
+                                                                value={question.question 
+                                                                    
                                                                 }
                                                                 label="Please insert question here..."
                                                                 multiline
                                                                 rows={3}
                                                                 fullWidth
-                                                            />
+                                                            /> */}
                                                             <div className="">
+                                                            {/* <MathJaxContext config={config}><MathJax>{"\\(" + '\\sqrt{2} this is' + "\\)"}</MathJax></MathJaxContext> */}
                                                                 <div className="flex py-5 justify-between">
                                                                     <div className="flex ">
                                                                         <Radio
