@@ -27,6 +27,7 @@ const AddStudent = ({ show, onClose, student }) => {
         phone: student ? student.phone : "",
         address: student ? student.address : "",
         grade: student ? student.grade : "",
+        section: student ? student.section : "",
         city: student ? student.city : "",
         state: student ? student.state : "",
         gender: student ? student.gender : "female",
@@ -39,9 +40,10 @@ const AddStudent = ({ show, onClose, student }) => {
             setData({
                 first_name: student.first_name,
                 last_name: student.last_name,
-                email: student.user?student.user.email:'',
+                email: student.user ? student.user.email : "",
                 phone: student.phone,
                 address: student.address,
+                section: student.section,
                 grade: student.grade,
                 city: student.city,
                 state: student.state,
@@ -118,16 +120,27 @@ const AddStudent = ({ show, onClose, student }) => {
                     error={errors.phone}
                     helperText={errors.phone}
                 />
-                <TextField
-                    fullWidth
-                    label="Grade"
-                    // placeholder="optional"
-                    type="number"
-                    value={data.grade}
-                    onChange={(e) => setData("grade", e.target.value)}
-                    error={errors.grade}
-                    helperText={errors.grade}
-                />
+                <div className="flex gap-5">
+                    <TextField
+                        fullWidth
+                        label="Grade"
+                        // placeholder="optional"
+                        type="number"
+                        value={data.grade}
+                        onChange={(e) => setData("grade", e.target.value)}
+                        error={errors.grade}
+                        helperText={errors.grade}
+                    />
+                    <TextField
+                        fullWidth
+                        label="Section"
+                        // placeholder="optional"
+                        value={data.section}
+                        onChange={(e) => setData("section", e.target.value)}
+                        error={errors.section}
+                        helperText={errors.section}
+                    />
+                </div>
                 <div className="flex gap-5">
                     <FormControl fullWidth>
                         <div className="flex gap-5 items-center border p-[7px] rounded-md border-gray-300">

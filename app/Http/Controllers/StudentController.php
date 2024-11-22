@@ -37,6 +37,7 @@ class StudentController extends Controller
             'last_name' => 'required',
             'email' => 'required',
             'phone' => 'nullable',
+            'section'=>'required',
             'grade' => 'required',
             'date_of_birth' => 'required|date',
             'gender' => 'required|in:male,female',
@@ -44,6 +45,7 @@ class StudentController extends Controller
             'city' => 'required',
             'state' => 'required',
         ]);
+        dd($request->all());
         DB::transaction(function () use ($request) {
             $user = User::create(['name' => $request->first_name . ' ' . $request->last_name, 'email' => $request->email, 'password' => bcrypt($request->email)]);
             Student::create([
@@ -52,6 +54,7 @@ class StudentController extends Controller
                 'email' => $request->email,
                 'phone' => $request->phone,
                 'grade' => $request->grade,
+                'section' => $request->section,
                 'date_of_birth' => $request->date_of_birth,
                 'gender' => $request->gender,
                 'address' => $request->address,
