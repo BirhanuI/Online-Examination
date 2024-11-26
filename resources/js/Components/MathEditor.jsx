@@ -23,7 +23,7 @@ import {
 //     'mod+u': 'underline',
 // };
 
-const MathEditor = ({onChange}) => {
+const MathEditor = ({ onChange }) => {
     const [editor] = useState(() => withReact(createEditor()));
     const [value, setValue] = useState([
         {
@@ -31,36 +31,49 @@ const MathEditor = ({onChange}) => {
             children: [{ text: "" }],
         },
     ]);
-    const handleChange = useCallback((newValue) => {
-        setValue(newValue);
-        
-        // Convert the editor content to HTML string
-        const htmlString = newValue.map(node => {
-            if (node.type === 'paragraph') {
-                const textContent = node.children.map(child => {
-                    let text = child.text;
-                    // Apply formatting
-                    if (child.bold) text = `<strong>${text}</strong>`;
-                    if (child.italic) text = `<em>${text}</em>`;
-                    if (child.underline) text = `<u>${text}</u>`;
-                    return text;
-                }).join('');
-                return `<p>${textContent}</p>`;
-            } else if (node.type === 'math') {
-                const mathText = node.children && node.children[0] ? node.children[0].text : '';
-                return `<MathJax class="math-element" data-latex="${node.latex}">\\(${node.latex}\\)</MathJax>${mathText}`;
-            } else if (node.type === 'block-quote') {
-                return `<blockquote>${node.children.map(child => child.text).join('')}</blockquote>`;
-            }
-            return '';
-        }).join('');
+    const handleChange = useCallback(
+        (newValue) => {
+            setValue(newValue);
 
-        // console.log('HTML Content:', htmlString);
-        
-        if (onChange) {
-            onChange(htmlString);
-        }
-    }, [onChange]);
+            // Convert the editor content to HTML string
+            const htmlString = newValue
+                .map((node) => {
+                    if (node.type === "paragraph") {
+                        const textContent = node.children
+                            .map((child) => {
+                                let text = child.text;
+                                // Apply formatting
+                                if (child.bold)
+                                    text = `<strong>${text}</strong>`;
+                                if (child.italic) text = `<em>${text}</em>`;
+                                if (child.underline) text = `<u>${text}</u>`;
+                                return text;
+                            })
+                            .join("");
+                        return `<p>${textContent}</p>`;
+                    } else if (node.type === "math") {
+                        const mathText =
+                            node.children && node.children[0]
+                                ? node.children[0].text
+                                : "";
+                        return `<MathJax class="math-element" data-latex="${node.latex}">\\(${node.latex}\\)</MathJax>${mathText}`;
+                    } else if (node.type === "block-quote") {
+                        return `<blockquote>${node.children
+                            .map((child) => child.text)
+                            .join("")}</blockquote>`;
+                    }
+                    return "";
+                })
+                .join("");
+
+            // console.log('HTML Content:', htmlString);
+
+            if (onChange) {
+                onChange(htmlString);
+            }
+        },
+        [onChange]
+    );
     const renderElement = useCallback((props) => {
         // console.log(props);
         switch (props.element.type) {
@@ -72,11 +85,11 @@ const MathEditor = ({onChange}) => {
                         {props.children}
                     </blockquote>
                 );
-                default:
-                    return <DefaultElement {...props} />;
-                }
-            }, []);
-            
+            default:
+                return <DefaultElement {...props} />;
+        }
+    }, []);
+
     const renderLeaf = useCallback((props) => {
         return <Leaf {...props} />;
     }, []);
@@ -235,14 +248,10 @@ const MathElement = ({ attributes, children, element }) => {
     const handleLatexChange = (e) => {
         const newLatex = e.target.value;
         setLatex(newLatex);
-        
+
         // Update the element in Slate with the new LaTeX value
         const path = ReactEditor.findPath(editor, element);
-        Transforms.setNodes(
-            editor,
-            { latex: newLatex },
-            { at: path }
-        );
+        Transforms.setNodes(editor, { latex: newLatex }, { at: path });
     };
     return (
         <div {...attributes} className="inline-block">
@@ -262,7 +271,11 @@ const MathElement = ({ attributes, children, element }) => {
                     onDoubleClick={handleDoubleClick}
                     className="text-black inline-flex"
                 >
-                    <MathJax className="inline-block px-2 hover:bg-gray-700 " title="double click to edit" aria-placeholder="double click to edit">
+                    <MathJax
+                        className="inline-block px-2 hover:bg-gray-700 "
+                        title="double click to edit"
+                        aria-placeholder="double click to edit"
+                    >
                         {`\\(${latex}\\)`}
                     </MathJax>
                 </div>

@@ -1,4 +1,5 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+// import mix from 'laravel-mix'
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -11,7 +12,7 @@ import {
     ArrowForwardIos,
     Check,
 } from "@mui/icons-material";
-import { Link, router } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import CountDown from "@/Components/CountDown";
 import Modal from "@/Components/Modal";
 import { toast } from "react-toastify";
@@ -79,6 +80,7 @@ const TakeExam = ({ auth, exam, questions }) => {
     time.setMinutes(time.getMinutes() + Number(exam.duration));
     return (
         <AuthenticatedLayout user={auth.user}>
+            <Head title="Take Exam" />
             <div className="absolute top-0 left-0 right-0 bottom-0 z-10 bg-black opacity-40"></div>
             <div className="relative z-20">
                 <TimeExpiryModal show={showExpiryModal} />
@@ -143,7 +145,7 @@ const TakeExam = ({ auth, exam, questions }) => {
                                 {questions.map((question, index) => (
                                     <div className="w-full">
                                         <div className="p-5 py-10 font-space flex gap-2">
-                                            {index + 1}) {" "}
+                                            {index + 1}){" "}
                                             <MathJaxContext>
                                                 <MathJax>
                                                     <p
@@ -153,6 +155,17 @@ const TakeExam = ({ auth, exam, questions }) => {
                                                     ></p>
                                                 </MathJax>
                                             </MathJaxContext>
+                                        </div>
+                                        <div className={`flex justify-center pb-10 ${question.image ? "" : "hidden"}`}>
+                                            <img
+                                                src={
+                                                    window.location.origin +
+                                                    "/" +
+                                                    question.image
+                                                }
+                                                alt=""
+                                                srcset=""
+                                            />
                                         </div>
                                         <div className="flex gap-5 w-full px-10">
                                             <div className="w-full flex flex-col gap-5">

@@ -22,6 +22,7 @@ class Question extends Model
         'option4',
         'answer',
         'description',
+        'image',
     ];
 
     public function exam():BelongsTo

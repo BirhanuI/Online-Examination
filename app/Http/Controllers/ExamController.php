@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Exam;
 use App\Models\ExamSchedule;
+use App\Models\Question;
 use App\Models\Subject;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -21,6 +22,7 @@ class ExamController extends Controller
     }
     public function store(Request $request)
     {
+        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'title' => ['required', 'bail', 'min:3'],
             'description' => [''],
@@ -33,6 +35,7 @@ class ExamController extends Controller
             'questions.*.option3' => ['bail',],
             'questions.*.option4' => ['bail',],
             'questions.*.answer' => 'required|bail',
+            // 'questions.*.image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ],  [
             'questions.*.question.required' => 'Question is required.',
             'questions.*.option1.required' => 'Option A is required.',
@@ -44,9 +47,13 @@ class ExamController extends Controller
         }
         DB::transaction(function () use ($request) {
             $exam =  Exam::create($request->all());
-            //    dd($request->get('questions'));
-            $exam->questions()->createMany($request->get('questions'));
-            // $request->session()->flash('success', 'Exam created successfully.');
+            foreach ($request->questions as $question) {
+                // dd($question);
+                $imageName = time() . '.' . $question['image']->extension();
+                $question['image']->move(public_path('images'), $imageName);
+                // $exam->questions->create(array_merge($question, ['image' => "images/" . $imageName]));
+                Question::create(['exam_id'=> $exam->id, 'image' => "images/" . $imageName , 'question' => $question['question'], 'option1' => $question['option1'], 'option2' => $question['option2'], 'option3' => $question['option3'], 'option4' => $question['option4'], 'answer' => $question['answer']]);
+            }
         });
     }
     public function create()
@@ -120,7 +127,7 @@ class ExamController extends Controller
         if ($existingSchedule) {
             $existingSchedule->update(['date' => $date, 'time' => $time]);
         } else {
-        $exam->schedule()->create(['date' => $date, 'time' => $time]);
+            $exam->schedule()->create(['date' => $date, 'time' => $time]);
         }
     }
 }

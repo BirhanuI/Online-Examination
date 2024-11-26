@@ -14,25 +14,40 @@ import {
     Select,
     TextField,
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { toast } from "react-toastify";
 import { Add, ArrowDropDown, Remove } from "@mui/icons-material";
-import React, { useState, useMemo, useCallback  } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import AddSubject from "./addSubject";
 import { MathJax, MathJaxContext } from "better-react-mathjax";
 import MathEditor from "@/Components/MathEditor";
 
-
-
-
-
 const CreateExam = ({ auth, exam, subject }) => {
+    const VisuallyHiddenInput = styled("input")({
+        clip: "rect(0 0 0 0)",
+        clipPath: "inset(50%)",
+        height: 1,
+        overflow: "hidden",
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        whiteSpace: "nowrap",
+        width: 1,
+    });
     const config = {
-        loader: { load: ['input/asciimath', 'output/chtml'] },
+        loader: { load: ["input/asciimath", "output/chtml"] },
         tex: {
-            inlineMath: [['$', '$'], ['\\(', '\\)']],
-            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            inlineMath: [
+                ["$", "$"],
+                ["\\(", "\\)"],
+            ],
+            displayMath: [
+                ["$$", "$$"],
+                ["\\[", "\\]"],
+            ],
             processEscapes: true,
-        }
+        },
     };
     const ExamForm = useForm({
         title: exam ? exam.title : "",
@@ -47,6 +62,7 @@ const CreateExam = ({ auth, exam, subject }) => {
             : [
                   {
                       question: "",
+                      image: null,
                       option1: "",
                       option2: "",
                       option3: "",
@@ -149,7 +165,12 @@ const CreateExam = ({ auth, exam, subject }) => {
                                     error={ExamForm.errors.grade}
                                     helperText={ExamForm.errors.grade}
                                     value={ExamForm.data.grade}
-                                    onChange={(e) => ExamForm.setData("grade",e.target.value)}
+                                    onChange={(e) =>
+                                        ExamForm.setData(
+                                            "grade",
+                                            e.target.value
+                                        )
+                                    }
                                 />
                                 <FormControl
                                     fullWidth
@@ -172,7 +193,9 @@ const CreateExam = ({ auth, exam, subject }) => {
                                                 setShowSubjectModal(true)
                                             }
                                         >
-                                           <div className="text-gray-400"><Add /> add Subject</div> 
+                                            <div className="text-gray-400">
+                                                <Add /> add Subject
+                                            </div>
                                         </MenuItem>
                                         {subject.map((subject) => (
                                             <MenuItem
@@ -276,40 +299,59 @@ const CreateExam = ({ auth, exam, subject }) => {
                                                     </AccordionSummary>
                                                     <AccordionDetails>
                                                         <div className="">
-                                                            <MathJaxContext config={config}>
-                                                                <MathEditor onChange={(equations) => handleQuestionChange(index, "question", equations)}/>
+                                                            <MathJaxContext
+                                                                config={config}
+                                                            >
+                                                                <MathEditor
+                                                                    onChange={(
+                                                                        equations
+                                                                    ) =>
+                                                                        handleQuestionChange(
+                                                                            index,
+                                                                            "question",
+                                                                            equations
+                                                                        )
+                                                                    }
+                                                                />
                                                             </MathJaxContext>
-                                                            {/* <TextField
-                                                                error={
-                                                                    ExamForm
-                                                                        .errors[
-                                                                        `questions.${index}.question`
-                                                                    ]
-                                                                }
-                                                                helperText={
-                                                                    ExamForm
-                                                                        .errors[
-                                                                        `questions.${index}.question`
-                                                                    ]
-                                                                }
-                                                                onChange={(e) =>
-                                                                    handleQuestionChange(
-                                                                        index,
-                                                                        "question",
-                                                                        e.target
-                                                                            .value
-                                                                    )
-                                                                }
-                                                                value={question.question 
-                                                                    
-                                                                }
-                                                                label="Please insert question here..."
-                                                                multiline
-                                                                rows={3}
-                                                                fullWidth
-                                                            /> */}
-                                                            <div className="">
-                                                            {/* <MathJaxContext config={config}><MathJax>{"\\(" + '\\sqrt{2} this is' + "\\)"}</MathJax></MathJaxContext> */}
+                                                            <div className="py-5">
+                                                                <Button
+                                                                    component="label"
+                                                                    variant="contained"
+                                                                    tabIndex={
+                                                                        -1
+                                                                    }
+                                                                    color={
+                                                                        ExamForm
+                                                                            .data
+                                                                            .questions[
+                                                                            index
+                                                                        ].image
+                                                                            ? "success"
+                                                                            : "info"
+                                                                    }
+                                                                    startIcon={
+                                                                        <CloudUploadIcon />
+                                                                    }
+                                                                    fullWidth
+                                                                >
+                                                                    Upload Image
+                                                                    <VisuallyHiddenInput
+                                                                        type="file"
+                                                                        onChange={(
+                                                                            event
+                                                                        ) =>
+                                                                            handleQuestionChange(
+                                                                                index,
+                                                                                "image",
+                                                                                event
+                                                                                    .target
+                                                                                    .files[0]
+                                                                            )
+                                                                        }
+                                                                        accept="image/*"
+                                                                    />
+                                                                </Button>
                                                                 <div className="flex py-5 justify-between">
                                                                     <div className="flex ">
                                                                         <Radio
