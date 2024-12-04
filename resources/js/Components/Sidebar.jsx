@@ -64,10 +64,10 @@ const SidebarComponent = () => {
                     icon={<QuizIcon />}
                     component={<Link href={route("exam.index")} />}
                     style={{
-                        backgroundColor: route().current("exam.index")
+                        backgroundColor: route().current("exam")
                             ? " #fb923c "
                             : "  ",
-                        Color: route().current("exam.index")
+                        Color: route().current("exam")
                             ? " white "
                             : " white ",
                     }}
@@ -78,7 +78,7 @@ const SidebarComponent = () => {
                     icon={<GroupIcon />}
                     component={<Link href={route("student.index")} />}
                     style={{
-                        backgroundColor: route().current("student")
+                        backgroundColor: route().current("student.index")
                             ? " #1f2937 "
                             : "  ",
                     }}
@@ -87,8 +87,10 @@ const SidebarComponent = () => {
                 </MenuItem>
                 <MenuItem
                     icon={<GroupIcon />}
+                    component={<Link href={route("teacher.index")} />}
+
                     style={{
-                        backgroundColor: route().current("teachers")
+                        backgroundColor: route().current("teacher")
                             ? " #1f2937 "
                             : "  ",
                     }}

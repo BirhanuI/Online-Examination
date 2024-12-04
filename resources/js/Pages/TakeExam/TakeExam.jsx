@@ -163,8 +163,8 @@ const TakeExam = ({ auth, exam, questions }) => {
                                                     "/" +
                                                     question.image
                                                 }
-                                                alt=""
-                                                srcset=""
+                                                alt="question image"
+                                                className='h-60'
                                             />
                                         </div>
                                         <div className="flex gap-5 w-full px-10">

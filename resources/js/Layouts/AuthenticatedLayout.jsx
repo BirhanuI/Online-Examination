@@ -15,11 +15,11 @@ export default function Authenticated({ user, header, children }) {
     return (
         <div className="flex ">
             <ToastContainer />
-            {user.role === "admin" && <SidebarComponent />}
+            {user.role !== "student" && <SidebarComponent />}
             <div className="min-h-screen bg-gray-100 w-full">
                 <nav
                     className={`${
-                        user.role === "admin"
+                        user.role !== "student"
                             ? "bg-white"
                             : "bg-gray-800 sticky top-0 "
                     } bg-gray-800 border-b border-gray-100`}
@@ -27,7 +27,7 @@ export default function Authenticated({ user, header, children }) {
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="flex justify-between h-20">
                             <div className="flex items-center">
-                                {user.role === "admin" ? (
+                                {user.role !== "student" ? (
                                     <IconButton>
                                         <MenuIcon fontSize="large" />
                                     </IconButton>
@@ -45,7 +45,7 @@ export default function Authenticated({ user, header, children }) {
                                     </Link>
                                 )}
 
-                                {user.role === "admin" ? (
+                                {user.role !== "student" ? (
                                     <div></div>
                                 ) : (
                                     <div

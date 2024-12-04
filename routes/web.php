@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\TeacherController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -39,6 +40,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/exam/schedule/{id}', [ExamController::class, 'setExamSchedule'])->name('exam.set-schedule');
 
     Route::resource('student', StudentController::class)->name('student.index', 'student.create', 'student.store', 'student.edit', 'student.update', 'student.destroy');
+
+    Route::resource('teacher', TeacherController::class)->name('teacher.index', 'teacher.create', 'teacher.store', 'teacher.edit', 'teacher.update', 'teacher.destroy');
 
     Route::get('/previous-exam', [ExamResultController::class, 'index'])->name('result.index');
     Route::get('/previous-exam/{id}', [ExamResultController::class, 'show'])->name('result.show');

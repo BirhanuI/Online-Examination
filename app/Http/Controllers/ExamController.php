@@ -6,8 +6,10 @@ use App\Models\Exam;
 use App\Models\ExamSchedule;
 use App\Models\Question;
 use App\Models\Subject;
+use App\Models\Teacher;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
@@ -22,7 +24,8 @@ class ExamController extends Controller
     }
     public function store(Request $request)
     {
-        // dd($request->all());
+        // dd(Auth::id());
+        // dd($teacher);
         $validator = Validator::make($request->all(), [
             'title' => ['required', 'bail', 'min:3'],
             'description' => [''],
@@ -46,13 +49,15 @@ class ExamController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
         DB::transaction(function () use ($request) {
-            $exam =  Exam::create($request->all());
+            $teacher = Teacher::where('user_id', Auth::id())->first();
+
+            $exam =  Exam::create(array_merge($request->all(), ['user_id' => $teacher->id]));
             foreach ($request->questions as $question) {
                 // dd($question);
                 $imageName = time() . '.' . $question['image']->extension();
                 $question['image']->move(public_path('images'), $imageName);
                 // $exam->questions->create(array_merge($question, ['image' => "images/" . $imageName]));
-                Question::create(['exam_id'=> $exam->id, 'image' => "images/" . $imageName , 'question' => $question['question'], 'option1' => $question['option1'], 'option2' => $question['option2'], 'option3' => $question['option3'], 'option4' => $question['option4'], 'answer' => $question['answer']]);
+                Question::create(['exam_id' => $exam->id, 'image' => "images/" . $imageName, 'question' => $question['question'], 'option1' => $question['option1'], 'option2' => $question['option2'], 'option3' => $question['option3'], 'option4' => $question['option4'], 'answer' => $question['answer']]);
             }
         });
     }

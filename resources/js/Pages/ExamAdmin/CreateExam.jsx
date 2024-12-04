@@ -19,7 +19,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { toast } from "react-toastify";
 import { Add, ArrowDropDown, Remove } from "@mui/icons-material";
 import React, { useState, useMemo, useCallback } from "react";
-import AddSubject from "./addSubject";
+import AddSubject from "@/Components/addSubject";
 import { MathJax, MathJaxContext } from "better-react-mathjax";
 import MathEditor from "@/Components/MathEditor";
 

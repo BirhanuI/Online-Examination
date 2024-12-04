@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
@@ -15,7 +17,14 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $student = Student::with('user')->latest()->get();
+        $teacher = Teacher::where('user_id', Auth::id())->first();
+        dd($teacher->students());
+        if (Auth::user()->role == 'admin') {
+            $student = Student::with('user')->latest()->get();
+        }elseif (Auth::user()->role == 'teacher') {
+            
+        }
+
         return Inertia::render('Student/Student', ['students' => $student]);
     }
 
@@ -37,7 +46,7 @@ class StudentController extends Controller
             'last_name' => 'required',
             'email' => 'required',
             'phone' => 'nullable',
-            'section'=>'required',
+            'section' => 'required',
             'grade' => 'required',
             'date_of_birth' => 'required|date',
             'gender' => 'required|in:male,female',
@@ -45,7 +54,7 @@ class StudentController extends Controller
             'city' => 'required',
             'state' => 'required',
         ]);
-        dd($request->all());
+        // dd($request->all());
         DB::transaction(function () use ($request) {
             $user = User::create(['name' => $request->first_name . ' ' . $request->last_name, 'email' => $request->email, 'password' => bcrypt($request->email)]);
             Student::create([
@@ -100,7 +109,7 @@ class StudentController extends Controller
             'city' => 'required',
             'state' => 'required',
         ]);
-        DB::transaction(function () use ($request,$id) {
+        DB::transaction(function () use ($request, $id) {
             $student = Student::find($id);
             $student->update(
                 [
@@ -113,11 +122,11 @@ class StudentController extends Controller
                     'address' => $request->address,
                     'city' => $request->city,
                     'state' => $request->state,
-                    ]
-                );
-                // dd($student);
-                User::where('id', $student->user_id)->update(['name' => $request->first_name . ' ' . $request->last_name, 'email' => $request->email]);
-            });
+                ]
+            );
+            // dd($student);
+            User::where('id', $student->user_id)->update(['name' => $request->first_name . ' ' . $request->last_name, 'email' => $request->email]);
+        });
     }
 
     /**
