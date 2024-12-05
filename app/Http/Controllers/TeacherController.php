@@ -17,7 +17,7 @@ class TeacherController extends Controller
      */
     public function index()
     {
-        $teachers = Teacher::latest()->get();
+        $teachers = Teacher::with('grade_section','user')->latest()->get();
         $subject = Subject::all();
        return Inertia::render('Teacher/Index', ['teachers' => $teachers,'subject' => $subject]);
     }
@@ -62,6 +62,8 @@ class TeacherController extends Controller
             $teacher = Teacher::create([
                 'user_id' => $user->id,
                 'full_name' => $request->first_name." ".$request->last_name,
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
                 'email' => $request->email,
                 'phone' => $request->phone,
                 'date_of_birth' => $request->date_of_birth,

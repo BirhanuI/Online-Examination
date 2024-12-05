@@ -19,13 +19,14 @@ class StudentController extends Controller
     {
         $teacher = Teacher::where('user_id', Auth::id())->first();
         // dd($teacher->students());
-
+        $student = [];
         if (Auth::user()->role == 'admin') {
             $student = Student::with('user')->latest()->get();
         } elseif (Auth::user()->role == 'teacher') {
-            if ($teacher->students() == null) {
+            if ($teacher->students() !== null) {
 
                 $student = $teacher->students()->latest()->get();
+                // dd($student);
             }
         }
 
@@ -107,6 +108,7 @@ class StudentController extends Controller
             'email' => 'required',
             'phone' => 'nullable',
             'grade' => 'required',
+            'section' => 'required',
             'date_of_birth' => 'required|date',
             'gender' => 'required|in:male,female',
             'address' => 'required',
@@ -121,6 +123,7 @@ class StudentController extends Controller
                     'last_name' => $request->last_name,
                     'phone' => $request->phone,
                     'grade' => $request->grade,
+                    'section' => $request->section,
                     'date_of_birth' => $request->date_of_birth,
                     'gender' => $request->gender,
                     'address' => $request->address,

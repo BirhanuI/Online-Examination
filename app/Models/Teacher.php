@@ -17,6 +17,8 @@ class Teacher extends Model
         'user_id',
         'email',
         'full_name',
+        'first_name',
+        'last_name',
         'phone',
         'grade',
         'date_of_birth',
@@ -36,10 +38,11 @@ class Teacher extends Model
     }
     public function students()
     {
-        return Student::whereIn('grade_id', $this->grade_section()->pluck('grade_id'))
+        return Student::whereIn('grade', $this->grade_section()->pluck('grade_id'))
                       ->where(function ($query) {
                           foreach ($this->grade_section as $gradeSection) {
-                              $sections = explode(',', $gradeSection->sections);
+                              $sections = explode(',', $gradeSection->section_id);
+                            //   dd($sections);
                               $query->orWhereIn('section', $sections);
                           }
                       });

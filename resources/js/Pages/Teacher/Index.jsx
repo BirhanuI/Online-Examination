@@ -12,7 +12,7 @@ const Index = ({ auth, teachers,subject }) => {
         }
     }
 
-    const examColumn = [
+    const teachersColumns = [
         {
             accessorKey: "avatar",
             header: "Avatar",
@@ -44,6 +44,7 @@ const Index = ({ auth, teachers,subject }) => {
                         <IconButton
                             onClick={() => {
                                 setStudent(row.original);
+                                console.log(row.original);
                                 setShowAddStudent(true);
                             }}
                         >
@@ -69,7 +70,7 @@ const Index = ({ auth, teachers,subject }) => {
         <AuthenticatedLayout user={auth.user}>
             <Head title="Teachers" />
             <AddTeacher
-                student={student}
+                teacher={student}
                 show={showAddStudent}
                 subject={subject}
                 onClose={setShowAddStudent}
@@ -90,7 +91,7 @@ const Index = ({ auth, teachers,subject }) => {
                         </Button>
                     </div>
                     <div className="">
-                        <DataTable data={teachers} columns={examColumn} />
+                        <DataTable data={teachers} columns={teachersColumns} />
                     </div>
                 </div>
             </div>

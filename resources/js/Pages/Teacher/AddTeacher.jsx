@@ -282,7 +282,7 @@ const AddTeacher = ({ show, onClose, teacher, subject }) => {
                                 >
                                     <InputLabel>Subject</InputLabel>
                                     <Select
-                                        value={data.subject_id}
+                                        value={item.subject_id}
                                         label="Subject"
                                         onChange={(e) =>
                                             handleGradeSectionChange(
