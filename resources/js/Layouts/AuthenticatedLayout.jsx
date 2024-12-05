@@ -15,7 +15,7 @@ export default function Authenticated({ user, header, children }) {
     return (
         <div className="flex ">
             <ToastContainer />
-            {user.role !== "student" && <SidebarComponent />}
+            {user.role !== "student" && <SidebarComponent user={user} />}
             <div className="min-h-screen bg-gray-100 w-full">
                 <nav
                     className={`${

@@ -14,7 +14,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import { Link } from "@inertiajs/react";
 
-const SidebarComponent = () => {
+const SidebarComponent = ({user}) => {
     return (
         <Sidebar
             className="-mt-0. font-space h-screen "
@@ -93,6 +93,7 @@ const SidebarComponent = () => {
                         backgroundColor: route().current("teacher")
                             ? " #1f2937 "
                             : "  ",
+                            display: user.role == "teacher" ? "none" : ""
                     }}
                 >
                     Teachers

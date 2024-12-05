@@ -18,15 +18,12 @@ class StudentController extends Controller
     public function index()
     {
         $teacher = Teacher::where('user_id', Auth::id())->first();
-        // dd($teacher->students());
         $student = [];
         if (Auth::user()->role == 'admin') {
             $student = Student::with('user')->latest()->get();
         } elseif (Auth::user()->role == 'teacher') {
             if ($teacher->students() !== null) {
-
                 $student = $teacher->students()->latest()->get();
-                // dd($student);
             }
         }
 
