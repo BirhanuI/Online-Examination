@@ -53,11 +53,15 @@ class ExamController extends Controller
 
             $exam =  Exam::create(array_merge($request->all(), ['user_id' => $teacher->id]));
             foreach ($request->questions as $question) {
-                // dd($question);
-                $imageName = time() . '.' . $question['image']->extension();
-                $question['image']->move(public_path('images'), $imageName);
+                if ($question['image']) {
+                    $imageName = time() . '.' . $question['image']->extension();
+                    $question['image']->move(public_path('images'), $imageName);
+                    Question::create(['exam_id' => $exam->id, 'image' => "images/" . $imageName, 'question' => $question['question'], 'option1' => $question['option1'], 'option2' => $question['option2'], 'option3' => $question['option3'], 'option4' => $question['option4'], 'answer' => $question['answer']]);
+                }
+
+                Question::create(['exam_id' => $exam->id, 'question' => $question['question'], 'option1' => $question['option1'], 'option2' => $question['option2'], 'option3' => $question['option3'], 'option4' => $question['option4'], 'answer' => $question['answer']]);
+
                 // $exam->questions->create(array_merge($question, ['image' => "images/" . $imageName]));
-                Question::create(['exam_id' => $exam->id, 'image' => "images/" . $imageName, 'question' => $question['question'], 'option1' => $question['option1'], 'option2' => $question['option2'], 'option3' => $question['option3'], 'option4' => $question['option4'], 'answer' => $question['answer']]);
             }
         });
     }
