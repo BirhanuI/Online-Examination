@@ -50,6 +50,7 @@ const Index = ({ auth, exams }) => {
             header: "Grade",
             size: 100,
         },
+        
         {
             accessorKey: "schedule_date",
             header: "Give Exam",
@@ -58,7 +59,7 @@ const Index = ({ auth, exams }) => {
                 <div className="">
                     <Button
                         variant="contained"
-                        // disabled={row.original.schedule?true:false}
+                        disabled={auth.user.role == "admin"?false:true}
                         onClick={() => {
                             setExamId(row.original.id);
                             setShowScheduleModal(true);

@@ -18,7 +18,12 @@ class ExamController extends Controller
 {
     public function index()
     {
-        $exams = Exam::with('schedule')->latest()->get();
+        $role = Auth::user()->role;
+        if ($role == 'teacher') {
+            $exams = Exam::with('schedule')->where('user_id',Auth::id())->latest()->get();
+        }else{
+            $exams = Exam::with('schedule')->latest()->get();
+        }
 
         return Inertia::render('ExamAdmin/Index', ['exams' => $exams]);
     }
@@ -49,9 +54,8 @@ class ExamController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
         DB::transaction(function () use ($request) {
-            $teacher = Teacher::where('user_id', Auth::id())->first();
 
-            $exam =  Exam::create(array_merge($request->all(), ['user_id' => $teacher->id]));
+            $exam =  Exam::create(array_merge($request->all(), ['user_id' => Auth::id()]));
             foreach ($request->questions as $question) {
                 if ($question['image']) {
                     $imageName = time() . '.' . $question['image']->extension();

@@ -19,6 +19,7 @@ class Exam extends Model
         'subject_id',
         'duration',
         'grade',
+        'user_id',
     ];
     protected $appends = ['subject_name'];
     public function subject():BelongsTo
