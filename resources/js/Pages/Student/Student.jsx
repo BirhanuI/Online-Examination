@@ -7,7 +7,13 @@ import AddStudent from "./AddStudent";
 import { useState } from "react";
 const StudentIndex = ({ auth, students }) => {
     function handleDelete(id) {
-        if (confirm(`Are you sure you want to delete student ${students.find((s) => s.id === id).full_name}?`)) {
+        if (
+            confirm(
+                `Are you sure you want to delete student ${
+                    students.find((s) => s.id === id).full_name
+                }?`
+            )
+        ) {
             router.delete(`/student/${id}`);
         }
     }
@@ -76,16 +82,18 @@ const StudentIndex = ({ auth, students }) => {
                 <div className="p-10 bg-white flex border rounded shadow-lg flex-col gap-10">
                     <div className="flex justify-between items-center text-lg w-full ">
                         <p className="font-space text-gray-800">Students</p>
-                        <Button
-                            variant="contained"
-                            onClick={() => {
-                                setStudent(null);
-                                setShowAddStudent(true);
-                            }}
-                        >
-                            <Add fontSize="medium" />
-                            Add Student
-                        </Button>
+                        {auth.user.role == "admin" && (
+                            <Button
+                                variant="contained"
+                                onClick={() => {
+                                    setStudent(null);
+                                    setShowAddStudent(true);
+                                }}
+                            >
+                                <Add fontSize="medium" />
+                                Add Student
+                            </Button>
+                        )}
                     </div>
                     <div className="">
                         <DataTable data={students} columns={examColumn} />

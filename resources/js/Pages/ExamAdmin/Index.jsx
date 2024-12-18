@@ -8,14 +8,14 @@ import ScheduleExam from "./ScheduleExam";
 import { useEffect } from "react";
 import axios from "axios";
 const Index = ({ auth, exams }) => {
-    useEffect(()=>{
-     const fetch = async () => {
-         await axios.get('/api/time').then((res)=>{
-             console.log(res.data.time);
-         });
-     }   
-     fetch();
-    },[]);
+    useEffect(() => {
+        const fetch = async () => {
+            await axios.get("/api/time").then((res) => {
+                console.log(res.data.time);
+            });
+        };
+        fetch();
+    }, []);
     function handleDelete(id) {
         router.delete(`/exam/${id}`);
     }
@@ -50,7 +50,7 @@ const Index = ({ auth, exams }) => {
             header: "Grade",
             size: 100,
         },
-        
+
         {
             accessorKey: "schedule_date",
             header: "Give Exam",
@@ -59,13 +59,14 @@ const Index = ({ auth, exams }) => {
                 <div className="">
                     <Button
                         variant="contained"
-                        disabled={auth.user.role == "admin"?false:true}
+                        disabled={auth.user.role == "admin" ? false : true}
                         onClick={() => {
                             setExamId(row.original.id);
                             setShowScheduleModal(true);
                         }}
-                        color={row.original.schedule?"warning":"primary"}
-                    >{row.original.schedule?"reschedule":"Schedule"}
+                        color={row.original.schedule ? "warning" : "primary"}
+                    >
+                        {row.original.schedule ? "reschedule" : "Schedule"}
                     </Button>
                 </div>
             ),
@@ -75,26 +76,33 @@ const Index = ({ auth, exams }) => {
             accessorKey: "actions",
             header: "Actions",
             size: 100,
-            Cell: ({ row }) => (
-                <div className="">
-                    <Tooltip title="Edit Exam" placement="top">
-                        <IconButton
-                            onClick={() =>
-                                router.get(`/exam/${row.original.id}`)
-                            }
-                        >
-                            <Edit fontSize="small" />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Delete Exam" placement="top">
-                        <IconButton
-                            onClick={() => handleDelete(row.original.id)}
-                        >
-                            <Delete fontSize="small" />
-                        </IconButton>
-                    </Tooltip>
-                </div>
-            ),
+            Cell: ({ row }) => 
+                auth.user.id == row.original.user_id ? (
+                    <div className="">
+                        <div className="">
+                            <Tooltip title="Edit Exam" placement="top">
+                                <IconButton
+                                    onClick={() =>
+                                        router.get(`/exam/${row.original.id}`)
+                                    }
+                                >
+                                    <Edit fontSize="small" />
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Delete Exam" placement="top">
+                                <IconButton
+                                    onClick={() =>
+                                        handleDelete(row.original.id)
+                                    }
+                                >
+                                    <Delete fontSize="small" />
+                                </IconButton>
+                            </Tooltip>
+                        </div>
+                    </div>
+                ) : (
+                    <div></div>
+                ),
             size: 150,
         },
     ];
