@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Attempts;
 use App\Models\Exam;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -47,12 +48,17 @@ class ExamResultController extends Controller
         if (!$exam) {
             return response()->json(['error' => 'Exam not found'], 404);
         }
-        $exam->load(['questions' => function ($query) {
-            $query->select('id', 'exam_id', 'question', 'option1', 'option2', 'option3', 'option4', 'answer');
-        }, 'questions.responses' => function ($query) use ($userId) {
-            $query->where('user_id', $userId);
-        }]);
-        // $attempts = Attempts::where('exam_id',)
+        $exam->load([
+            'questions' => function ($query) {
+                $query->select('id', 'exam_id', 'question', 'option1', 'option2', 'option3', 'option4', 'answer');
+            },
+            'schedule' => function ($query) use ( $exam) {
+                $query->whereRaw('DATE_ADD(date, INTERVAL ? MINUTE) < ?', [$exam->duration, Carbon::now()]);
+            },
+            'questions.responses' => function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            }
+        ]);
         return Inertia::render('ExamResult/Show', [
             'exam' => $exam,'score'=> $request->score
         ]);

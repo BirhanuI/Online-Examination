@@ -40,33 +40,44 @@ const StudentIndex = ({ auth, students }) => {
             header: "Grade",
             size: 100,
         },
-        {
-            accessorKey: "actions",
-            header: "Actions",
-            size: 100,
-            Cell: ({ row }) => (
-                <div className="">
-                    <Tooltip title="Edit Exam" placement="top">
-                        <IconButton
-                            onClick={() => {
-                                setStudent(row.original);
-                                setShowAddStudent(true);
-                            }}
-                        >
-                            <Edit fontSize="small" />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Delete Exam" placement="top">
-                        <IconButton
-                            onClick={() => handleDelete(row.original.id)}
-                        >
-                            <Delete fontSize="small" />
-                        </IconButton>
-                    </Tooltip>
-                </div>
-            ),
-            size: 150,
-        },
+        auth.user.role == "teacher"
+            ? {
+                  accessorKey: "actions",
+                  header: "Result",
+                  size: 120,
+                  Cell: ({ row }) => (
+                          <Button variant="contained" size="small">
+                              See Results
+                          </Button>
+                  ),
+              }
+            : {
+                  accessorKey: "actions",
+                  header: "Actions",
+                  size: 100,
+                  Cell: ({ row }) => (
+                      <div className="">
+                          <Tooltip title="Edit Exam" placement="top">
+                              <IconButton
+                                  onClick={() => {
+                                      setStudent(row.original);
+                                      setShowAddStudent(true);
+                                  }}
+                              >
+                                  <Edit fontSize="small" />
+                              </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Delete Exam" placement="top">
+                              <IconButton
+                                  onClick={() => handleDelete(row.original.id)}
+                              >
+                                  <Delete fontSize="small" />
+                              </IconButton>
+                          </Tooltip>
+                      </div>
+                  ),
+                  size: 150,
+              },
     ];
     const [student, setStudent] = useState(null);
     const [showAddStudent, setShowAddStudent] = useState(false);

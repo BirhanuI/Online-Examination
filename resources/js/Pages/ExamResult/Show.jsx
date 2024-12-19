@@ -41,7 +41,7 @@ const Show = ({ auth, exam, score }) => {
                                         <MathJax>
                                             <span
                                                 dangerouslySetInnerHTML={
-                                                    exam.question
+                                                    {__html: exam.question}
                                                 }
                                             ></span>
                                         </MathJax>
